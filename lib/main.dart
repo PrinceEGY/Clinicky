@@ -1,5 +1,5 @@
-import 'package:clinkcy_local/home_handler/home_handler.dart';
 import 'package:clinkcy_local/pages/login.dart';
+import 'package:clinkcy_local/pages/on_boarding.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
       title: "Clincky",
-      home: LoginScreen(),
+      home: OnBoard(),
     );
   }
 }
