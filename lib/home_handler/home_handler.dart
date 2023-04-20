@@ -1,9 +1,9 @@
 import 'package:clinicky/home_handler/util/nav_bar.dart';
 import 'package:clinicky/home_handler/util/nav_button.dart';
-import 'package:clinicky/pages/main_pages/appointments.dart';
-import 'package:clinicky/pages/main_pages/home.dart';
-import 'package:clinicky/pages/main_pages/notifications.dart';
-import 'package:clinicky/pages/main_pages/profile.dart';
+import 'package:clinicky/screens/appointments/appointments_screen.dart';
+import 'package:clinicky/screens/home/home.dart';
+import 'package:clinicky/screens/notifications/notifications.dart';
+import 'package:clinicky/screens/profile/profile_screen.dart';
 import 'package:clinicky/util/color_pallete.dart';
 import 'package:flutter/material.dart';
 

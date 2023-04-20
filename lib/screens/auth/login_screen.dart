@@ -1,11 +1,12 @@
 import 'package:clinicky/backend_handler.dart';
 import 'package:clinicky/home_handler/home_handler.dart';
 import 'package:clinicky/util/color_pallete.dart';
+import 'package:clinicky/util/widgets/error_popup.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:page_transition/page_transition.dart';
 
-import '../../util/button.dart';
+import '../../util/widgets/button.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -162,21 +163,8 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       );
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          behavior: SnackBarBehavior.floating,
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          content: Container(
-            padding: const EdgeInsets.all(16),
-            height: 50,
-            decoration: const BoxDecoration(
-                color: Color(0xFFC72C41),
-                borderRadius: BorderRadius.all(Radius.circular(20))),
-            child: const Text("Invalid Password or Email address"),
-          ),
-        ),
-      );
+      showErrorMessage(
+          context: context, text: "Invalid Password or Email address");
     }
   }
 
