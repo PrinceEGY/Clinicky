@@ -1,3 +1,4 @@
+import 'package:clinicky/util/color_pallete.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatelessWidget {
@@ -7,6 +8,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: ColorPallete.mainColor,
         title: const Text("Home"),
       ),
       body: const Center(

@@ -1,5 +1,4 @@
-import 'package:clinkcy_local/pages/login.dart';
-import 'package:clinkcy_local/pages/on_boarding.dart';
+import 'package:clinicky/pages/starting_up/on_boarding.dart';
 import 'package:flutter/material.dart';
 
 void main() {

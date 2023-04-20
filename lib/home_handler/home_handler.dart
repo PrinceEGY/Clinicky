@@ -1,9 +1,10 @@
-import 'package:clinkcy_local/pages/appointments.dart';
-import 'package:clinkcy_local/pages/home.dart';
-import 'package:clinkcy_local/home_handler/util/nav_bar.dart';
-import 'package:clinkcy_local/home_handler/util/nav_button.dart';
-import 'package:clinkcy_local/pages/notifications.dart';
-import 'package:clinkcy_local/pages/profile.dart';
+import 'package:clinicky/home_handler/util/nav_bar.dart';
+import 'package:clinicky/home_handler/util/nav_button.dart';
+import 'package:clinicky/pages/main_pages/appointments.dart';
+import 'package:clinicky/pages/main_pages/home.dart';
+import 'package:clinicky/pages/main_pages/notifications.dart';
+import 'package:clinicky/pages/main_pages/profile.dart';
+import 'package:clinicky/util/color_pallete.dart';
 import 'package:flutter/material.dart';
 
 class HomeHandler extends StatefulWidget {
@@ -24,35 +25,38 @@ class _HomeHandlerState extends State<HomeHandler> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: pages[currentTab],
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        child: const Icon(Icons.add),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: NavBar(
-        onTabChange: (newIndex) => setState(() {
-          currentTab = newIndex;
-        }),
-        tabs: const [
-          NavButton(
-            icon: Icons.home,
-            text: "Home",
-          ),
-          NavButton(
-            icon: Icons.apartment,
-            text: "Appointments",
-          ),
-          NavButton(
-            icon: Icons.notifications,
-            text: "Notifications",
-          ),
-          NavButton(
-            icon: Icons.person,
-            text: "Profile",
-          ),
-        ],
+    return SafeArea(
+      child: Scaffold(
+        body: pages[currentTab],
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: ColorPallete.mainColor,
+          onPressed: () {},
+          child: const Icon(Icons.add),
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        bottomNavigationBar: NavBar(
+          onTabChange: (newIndex) => setState(() {
+            currentTab = newIndex;
+          }),
+          tabs: const [
+            NavButton(
+              icon: Icons.home,
+              text: "Home",
+            ),
+            NavButton(
+              icon: Icons.apartment,
+              text: "Appointments",
+            ),
+            NavButton(
+              icon: Icons.notifications,
+              text: "Notifications",
+            ),
+            NavButton(
+              icon: Icons.person,
+              text: "Profile",
+            ),
+          ],
+        ),
       ),
     );
   }

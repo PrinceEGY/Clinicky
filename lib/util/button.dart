@@ -1,4 +1,4 @@
-import 'package:clinkcy_local/util/color_pallete.dart';
+import 'package:clinicky/util/color_pallete.dart';
 import 'package:flutter/material.dart';
 
 class RoundedButton extends StatelessWidget {

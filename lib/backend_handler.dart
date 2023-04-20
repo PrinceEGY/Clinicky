@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:clinkcy_local/dummy.dart';
+import 'package:clinicky/dummy.dart';
 
 class BackendHandler {
   static final BackendHandler _instance = BackendHandler._internal();

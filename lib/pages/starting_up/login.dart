@@ -1,11 +1,11 @@
-import 'package:clinkcy_local/backend_handler.dart';
-import 'package:clinkcy_local/home_handler/home_handler.dart';
-import 'package:clinkcy_local/util/color_pallete.dart';
+import 'package:clinicky/backend_handler.dart';
+import 'package:clinicky/home_handler/home_handler.dart';
+import 'package:clinicky/util/color_pallete.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:page_transition/page_transition.dart';
 
-import '../util/button.dart';
+import '../../util/button.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});

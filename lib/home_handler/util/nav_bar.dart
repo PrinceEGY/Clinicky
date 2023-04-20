@@ -1,4 +1,4 @@
-import 'package:clinkcy_local/home_handler/util/nav_button.dart';
+import 'package:clinicky/home_handler/util/nav_button.dart';
 import 'package:flutter/material.dart';
 
 class NavBar extends StatefulWidget {
@@ -36,33 +36,35 @@ class _NavBarState extends State<NavBar> {
   @override
   Widget build(BuildContext context) {
     return BottomAppBar(
+      height: 70,
       shape: const CircularNotchedRectangle(),
       notchMargin: 10,
-      child: SizedBox(
-        height: 70,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: widget.tabs
-                  .map((e) => NavButton(
-                        icon: e.icon,
-                        text: e.text,
-                        onPressed: () {
-                          setState(() {
-                            selectedIndex = widget.tabs.indexOf(e);
-                          });
-                          e.onPressed?.call();
-                          widget.onTabChange?.call(selectedIndex);
-                        },
-                        active: selectedIndex == widget.tabs.indexOf(e),
-                      ))
-                  .toList(),
-            ),
-          ],
-        ),
+      child: Row(
+        children: getTabs(),
       ),
     );
+  }
+
+  List<Flexible> getTabs() {
+    List<Flexible> tabs = [];
+    for (int i = 0; i < widget.tabs.length; i++) {
+      tabs.add(Flexible(
+        fit: FlexFit.tight,
+        flex: i == 1 || i == 2 ? 5 : 3,
+        child: NavButton(
+          icon: widget.tabs[i].icon,
+          text: widget.tabs[i].text,
+          onPressed: () {
+            setState(() {
+              selectedIndex = widget.tabs.indexOf(widget.tabs[i]);
+            });
+            widget.tabs[i].onPressed?.call();
+            widget.onTabChange?.call(selectedIndex);
+          },
+          active: selectedIndex == widget.tabs.indexOf(widget.tabs[i]),
+        ),
+      ));
+    }
+    return tabs;
   }
 }

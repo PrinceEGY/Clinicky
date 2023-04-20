@@ -1,3 +1,4 @@
+import 'package:clinicky/util/color_pallete.dart';
 import 'package:flutter/material.dart';
 
 class NavButton extends StatefulWidget {
@@ -38,21 +39,28 @@ class _NavButtonState extends State<NavButton> {
   Widget build(BuildContext context) {
     return MaterialButton(
       onPressed: () {
-        print(widget.text + " $active");
+        debugPrint("${widget.text} $active");
         widget.onPressed?.call();
       },
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            widget.icon,
-            color: active ? Colors.blue : Colors.grey,
-          ),
-          Text(
-            widget.text,
-            style: TextStyle(color: active ? Colors.blue : Colors.grey),
-          ),
-        ],
+      padding: EdgeInsets.zero,
+      child: SizedBox(
+        width: double.infinity,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              widget.icon,
+              color: active ? ColorPallete.mainColor : ColorPallete.grey,
+            ),
+            Text(
+              widget.text,
+              style: TextStyle(
+                color: active ? ColorPallete.mainColor : ColorPallete.grey,
+                fontSize: 12,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

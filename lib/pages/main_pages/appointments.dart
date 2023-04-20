@@ -1,3 +1,4 @@
+import 'package:clinicky/util/color_pallete.dart';
 import 'package:flutter/material.dart';
 
 class AppointmentPage extends StatelessWidget {
@@ -8,6 +9,7 @@ class AppointmentPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Appointments"),
+        backgroundColor: ColorPallete.mainColor,
       ),
       body: const Center(
         child: Text("Appointments", style: TextStyle(fontSize: 40)),

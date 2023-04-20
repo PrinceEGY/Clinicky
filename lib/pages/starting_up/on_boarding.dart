@@ -1,5 +1,5 @@
-import 'package:clinkcy_local/pages/login.dart';
-import 'package:clinkcy_local/util/color_pallete.dart';
+import 'package:clinicky/pages/starting_up/login.dart';
+import 'package:clinicky/util/color_pallete.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_onboarding_slider/flutter_onboarding_slider.dart';
 import 'package:lottie/lottie.dart';
