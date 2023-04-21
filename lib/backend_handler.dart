@@ -15,4 +15,8 @@ class BackendHandler {
         jsonDecode(DummyData.signIn(email: email, password: password));
     return response["status"];
   }
+
+  int signUp({name, gender, email, password, type}) {
+    return 0;
+  }
 }

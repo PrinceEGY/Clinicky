@@ -1,4 +1,4 @@
-import 'package:clinicky/screens/auth/login_screen.dart';
+import 'package:clinicky/screens/auth/signup_screen.dart';
 import 'package:clinicky/util/color_pallete.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_onboarding_slider/flutter_onboarding_slider.dart';
@@ -34,7 +34,7 @@ class _OnBoardState extends State<OnBoard> {
               context,
               PageTransition(
                   duration: const Duration(milliseconds: 500),
-                  child: const LoginScreen(),
+                  child: const SignupScreen(),
                   type: PageTransitionType.rightToLeft));
         },
         totalPage: 3,

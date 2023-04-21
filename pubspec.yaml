@@ -16,6 +16,8 @@ dependencies:
   page_transition:
   showcaseview:
   flutter_onboarding_slider:
+  custom_radio_grouped_button:
+  google_fonts: ^4.0.3
 
 dev_dependencies:
   flutter_test:
