@@ -1,3 +1,4 @@
+import 'package:clinicky/home_handler/home_handler.dart';
 import 'package:clinicky/screens/onboarding/on_boarding_screen.dart';
 import 'package:clinicky/util/color_pallete.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +21,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: ColorPallete.getMaterialColor(ColorPallete.mainColor),
         textTheme: GoogleFonts.poppinsTextTheme(),
       ),
-      home: const OnBoard(),
+      home: const HomeHandler(),
     );
   }
 }

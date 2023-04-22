@@ -3,20 +3,42 @@ import 'package:clinicky/dummy.dart';
 
 class BackendHandler {
   static final BackendHandler _instance = BackendHandler._internal();
-  late String token;
+  late int _token = 123;
   factory BackendHandler() {
     return _instance;
   }
   BackendHandler._internal();
   static BackendHandler get instance => _instance;
 
-  int signIn({email, password, type}) {
-    var response =
-        jsonDecode(DummyData.signIn(email: email, password: password));
+  int signIn({required email, required password, required type}) {
+    var response = jsonDecode(DummyBackend.signIn(
+      email: email,
+      password: password,
+    ));
+
+    _token = response['token'];
     return response["status"];
   }
 
-  int signUp({name, gender, email, password, type}) {
-    return 0;
+  int signUp(
+      {required name,
+      required gender,
+      required email,
+      required password,
+      required type}) {
+    var response = jsonDecode(DummyBackend.signUp(
+      name: name,
+      gender: gender,
+      email: email,
+      password: password,
+      type: type,
+    ));
+    return response['status'];
+  }
+
+  Map<String, dynamic> getUserInfo() {
+    Map<String, dynamic> response =
+        jsonDecode(DummyBackend.getUserInfo(token: _token));
+    return response;
   }
 }

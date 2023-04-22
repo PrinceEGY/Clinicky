@@ -264,7 +264,7 @@ class _SignupScreenState extends State<SignupScreen> {
       );
     } else {
       showErrorMessage(
-          context: context, text: "Invalid Password or Email address");
+          context: context, text: "Email address already registered");
     }
   }
 
