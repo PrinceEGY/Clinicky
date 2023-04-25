@@ -40,19 +40,19 @@ class _HomeHandlerState extends State<HomeHandler> {
           tabs: const [
             NavButton(
               icon: Icons.home,
-              text: "Home",
+              text: "الرئيسية",
             ),
             NavButton(
               icon: Icons.apartment,
-              text: "Appointments",
+              text: "الحجوزات",
             ),
             NavButton(
               icon: Icons.notifications,
-              text: "Notifications",
+              text: "الإشعارات",
             ),
             NavButton(
               icon: Icons.person,
-              text: "Profile",
+              text: "الحساب",
             ),
           ],
         ),

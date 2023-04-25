@@ -1,7 +1,10 @@
-import 'package:clinicky/backend_handler.dart';
+import 'dart:convert';
+import 'package:clinicky/backend/backend_controller.dart';
 import 'package:clinicky/models/user_data.dart';
 import 'package:clinicky/util/color_pallete.dart';
+import 'package:clinicky/util/widgets/error_popup.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -11,48 +14,65 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final request = BackendHandler.instance;
-  late UserData userData;
+  final request = BackendController.instance;
+  late Future<UserData> futureUserData;
 
   @override
   void initState() {
     super.initState();
-    getUserInfo();
-  }
-
-  void getUserInfo() {
-    var response = request.getUserInfo();
-    userData = UserData.fromJson(response);
+    futureUserData = request.getUserInfo();
   }
 
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
-
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: ColorPallete.mainColor,
-          title: const Text("Home"),
-        ),
-        body: SizedBox(
-          width: screenWidth,
-          height: screenHeight,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(userData.name, style: const TextStyle(fontSize: 40)),
-              CircleAvatar(
-                radius: 70,
-                backgroundImage: AssetImage(userData.gender == "Male"
-                    ? "assets/images/male.png"
-                    : "assets/images/female.png"),
+    return FutureBuilder(
+      future: futureUserData,
+      builder: (context, AsyncSnapshot snapshot) {
+        if (snapshot.hasData) {
+          UserData userData = snapshot.data;
+          return SafeArea(
+            child: Scaffold(
+              body: SizedBox(
+                width: screenWidth,
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(20),
+                  child: Row(
+                    children: [
+                      CircleAvatar(
+                        radius: 25,
+                        backgroundImage: AssetImage(userData.gender == "ذكر"
+                            ? "assets/images/male.png"
+                            : "assets/images/female.png"),
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text("أهلا بيك \u{1F44B}"),
+                          Text(
+                            userData.name,
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
               ),
-            ],
-          ),
-        ),
-      ),
+            ),
+          );
+        } else {
+          return const Center(
+              child: SpinKitCubeGrid(
+            color: ColorPallete.mainColor,
+            size: 100,
+          ));
+        }
+      },
     );
   }
 }

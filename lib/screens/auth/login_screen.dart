@@ -1,10 +1,11 @@
-import 'package:clinicky/backend_handler.dart';
+import 'package:clinicky/backend/backend_controller.dart';
 import 'package:clinicky/home_handler/home_handler.dart';
 import 'package:clinicky/screens/auth/signup_screen.dart';
 import 'package:clinicky/util/color_pallete.dart';
 import 'package:clinicky/util/widgets/error_popup.dart';
 import 'package:custom_radio_grouped_button/custom_radio_grouped_button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:lottie/lottie.dart';
 import 'package:page_transition/page_transition.dart';
 
@@ -18,12 +19,14 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final _auth = BackendHandler.instance;
+  final _auth = BackendController.instance;
   final _formKey = GlobalKey<FormState>();
   final _email = TextEditingController();
   final _password = TextEditingController();
-  String _userType = "Patient";
 
+  String _userType = "patient";
+  bool _infoIsValid = false;
+  bool _keepSignedIn = true;
   bool _isPasswordVisible = false;
 
   @override
@@ -42,14 +45,27 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Lottie.asset('assets/animations/login.json',
-                      height: screenHeight * 0.4, width: screenWidth * 0.7),
                   const Text(
-                    "Login",
+                    "تسجيل الدخول",
                     style: TextStyle(
                       fontSize: 25,
                       fontWeight: FontWeight.bold,
                     ),
+                  ),
+                  Lottie.asset('assets/animations/login.json',
+                      height: screenHeight * 0.4, width: screenWidth * 0.7),
+                  CustomRadioButton(
+                    width: screenWidth * 0.4,
+                    elevation: 0,
+                    buttonTextStyle: const ButtonTextStyle(
+                        textStyle: TextStyle(fontSize: 16)),
+                    absoluteZeroSpacing: true,
+                    defaultSelected: "patient",
+                    buttonLables: const ["زائر", "طبيب"],
+                    buttonValues: const ["patient", "doctor"],
+                    radioButtonValue: (value) => {_userType = value},
+                    selectedColor: ColorPallete.mainColor,
+                    unSelectedColor: Colors.white,
                   ),
                   Form(
                     key: _formKey,
@@ -64,7 +80,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(20),
                             ),
-                            labelText: "Email address",
+                            labelText: "البريد الالكتروني",
                             prefixIcon: const Icon(Icons.email),
                           ),
                           validator: (value) {
@@ -83,7 +99,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(20),
                               ),
-                              labelText: "Password",
+                              labelText: "كلمة السر",
                               prefixIcon: const Icon(Icons.lock),
                               suffixIcon: IconButton(
                                   onPressed: () {
@@ -101,31 +117,34 @@ class _LoginScreenState extends State<LoginScreen> {
                       ],
                     ),
                   ),
-                  CustomRadioButton(
-                    width: screenWidth * 0.4,
-                    elevation: 0,
-                    buttonTextStyle: const ButtonTextStyle(
-                        textStyle: TextStyle(fontSize: 16)),
-                    absoluteZeroSpacing: true,
-                    defaultSelected: "Patient",
-                    buttonLables: const ["Patient", "Doctor"],
-                    buttonValues: const ["Patient", "Doctor"],
-                    radioButtonValue: (value) => {_userType = value},
-                    selectedColor: ColorPallete.mainColor,
-                    unSelectedColor: Colors.white,
+                  Row(
+                    children: [
+                      Checkbox(
+                          activeColor: ColorPallete.mainColor,
+                          value: _keepSignedIn,
+                          onChanged: (value) => setState(() {
+                                _keepSignedIn = value!;
+                              })),
+                      const Text("حفظ تسجيل الدخول"),
+                    ],
                   ),
                   RoundedButton(
                     onPressed: () {
+                      _infoIsValid = true;
                       FocusScope.of(context).unfocus();
                       _formKey.currentState!.validate();
-                      _validateInput();
+                      if (_infoIsValid) {
+                        _validateInput();
+                      }
                     },
                     color: ColorPallete.mainColor,
                     isBordered: false,
                     text: const Text(
-                      "Login",
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      "تسجيل الدخول",
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                   Row(
@@ -133,7 +152,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Text(
-                        "Don't have an account? ",
+                        "معندكش حساب ؟ ",
                         style: TextStyle(color: ColorPallete.mainColor),
                       ),
                       TextButton(
@@ -152,7 +171,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             );
                           },
                           child: const Text(
-                            "Sign Up",
+                            "سجل من هنا",
                             style: TextStyle(
                                 color: ColorPallete.mainColor,
                                 fontWeight: FontWeight.bold),
@@ -168,40 +187,58 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  void _validateInput() {
-    var response = _auth.signIn(
-      email: _email.text,
-      password: _password.text,
-      type: _userType,
+  void _validateInput() async {
+    final navigator = Navigator.of(context);
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (context) => const SpinKitSquareCircle(
+        color: Colors.white,
+        size: 100,
+      ),
     );
-    if (response == 200) {
-      Navigator.pushReplacement(
-        context,
+    try {
+      await _auth.signIn(
+          email: _email.text,
+          password: _password.text,
+          type: _userType,
+          keepSingedIn: _keepSignedIn);
+
+      navigator.pushReplacement(
         PageTransition(
           child: const HomeHandler(),
           type: PageTransitionType.rightToLeft,
         ),
       );
-    } else {
-      showErrorMessage(
-          context: context, text: "Invalid Password or Email address");
+    } catch (err) {
+      showDialogMessage(
+          context: context, text: err.toString(), color: ColorPallete.red);
+      Navigator.pop(context);
     }
   }
 
   String? checkEmail(value) {
     if (value == null || value.isEmpty) {
-      return "Enter Email";
+      _infoIsValid = false;
+
+      return "الرجاء ادخال بريد الكتروني";
     } else if (!RegExp(r"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$").hasMatch(value)) {
-      return "Enter valid Email";
+      _infoIsValid = false;
+
+      return "الرجاء ادخال بريد الكتروني صالح";
     }
     return null;
   }
 
   String? checkPassword(String? value) {
     if (value == null || value.isEmpty) {
-      return "Enter Password";
+      _infoIsValid = false;
+
+      return "الرجاء ادخال كلمة سر";
     } else if (value.length < 5) {
-      return "Enter valid Password";
+      _infoIsValid = false;
+
+      return "الرجاء ادخال كلمة سر اكثر من 5 حروف";
     }
     return null;
   }

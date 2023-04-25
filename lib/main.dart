@@ -1,5 +1,5 @@
-import 'package:clinicky/home_handler/home_handler.dart';
-import 'package:clinicky/screens/onboarding/on_boarding_screen.dart';
+import 'package:clinicky/screens/onboarding/splash_screen.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:clinicky/util/color_pallete.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -14,14 +14,27 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      // useInheritedMediaQuery: true,
+      localizationsDelegates: const [
+        GlobalCupertinoLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ],
+      supportedLocales: const [
+        Locale("en", "US"),
+        Locale("ar", "EG"),
+      ],
+      locale: const Locale("ar", "EG"),
       debugShowCheckedModeBanner: false,
       title: "Clincky",
       theme: ThemeData(
         primarySwatch: ColorPallete.getMaterialColor(ColorPallete.mainColor),
-        textTheme: GoogleFonts.poppinsTextTheme(),
+        textTheme: GoogleFonts.almaraiTextTheme(),
+        appBarTheme: const AppBarTheme(
+          elevation: 0,
+          backgroundColor: Colors.white,
+        ),
       ),
-      home: const HomeHandler(),
+      home: const SplashScreen(),
     );
   }
 }

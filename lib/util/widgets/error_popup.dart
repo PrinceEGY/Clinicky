@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-void showErrorMessage({context, String text = ""}) {
+void showDialogMessage({context, String text = "", color}) {
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
       behavior: SnackBarBehavior.floating,
@@ -8,10 +8,9 @@ void showErrorMessage({context, String text = ""}) {
       elevation: 0,
       content: Container(
         padding: const EdgeInsets.all(16),
-        height: 50,
-        decoration: const BoxDecoration(
-            color: Color(0xFFC72C41),
-            borderRadius: BorderRadius.all(Radius.circular(20))),
+        decoration: BoxDecoration(
+            color: color,
+            borderRadius: const BorderRadius.all(Radius.circular(20))),
         child: Text(text),
       ),
     ),

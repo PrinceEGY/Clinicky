@@ -1,5 +1,6 @@
-import 'package:clinicky/backend_handler.dart';
-import 'package:clinicky/home_handler/home_handler.dart';
+import 'package:clinicky/backend/backend_controller.dart';
+import 'package:clinicky/models/clinic_data.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:clinicky/screens/auth/login_screen.dart';
 import 'package:clinicky/util/color_pallete.dart';
 import 'package:clinicky/util/widgets/error_popup.dart';
@@ -18,7 +19,7 @@ class SignupScreen extends StatefulWidget {
 }
 
 class _SignupScreenState extends State<SignupScreen> {
-  final _auth = BackendHandler.instance;
+  final _auth = BackendController.instance;
   final _formKey = GlobalKey<FormState>();
   final _name = TextEditingController();
   final _email = TextEditingController();
@@ -26,7 +27,9 @@ class _SignupScreenState extends State<SignupScreen> {
   final _confirmPassword = TextEditingController();
 
   String? _gender;
-  String _userType = "Patient";
+  String? _specialization;
+  String _userType = "patient";
+  bool _infoIsValid = false;
   bool _isPasswordVisible = false;
   bool _isConfPasswordVisible = false;
 
@@ -44,18 +47,42 @@ class _SignupScreenState extends State<SignupScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Lottie.asset('assets/animations/signup.json',
-                    height: screenHeight * 0.4, width: screenWidth * 0.7),
+                const SizedBox(height: 20),
                 const Text(
-                  "Sign Up",
+                  "تسجيل حساب جديد",
                   style: TextStyle(
                     fontSize: 25,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const SizedBox(
-                  height: 20,
+                Lottie.asset('assets/animations/signup.json',
+                    height: screenHeight * 0.4, width: screenWidth * 0.7),
+                const SizedBox(height: 20),
+                const Align(
+                  alignment: Alignment.center,
+                  child: Text(
+                    "نوع الحساب:",
+                    textAlign: TextAlign.end,
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
                 ),
+                const SizedBox(height: 5),
+                CustomRadioButton(
+                  width: screenWidth * 0.4,
+                  elevation: 0,
+                  buttonTextStyle:
+                      const ButtonTextStyle(textStyle: TextStyle(fontSize: 16)),
+                  absoluteZeroSpacing: true,
+                  defaultSelected: "patient",
+                  buttonLables: const ["زائر", "طبيب"],
+                  buttonValues: const ["patient", "doctor"],
+                  radioButtonValue: (value) => setState(() {
+                    _userType = value;
+                  }),
+                  selectedColor: ColorPallete.mainColor,
+                  unSelectedColor: Colors.white,
+                ),
+                const SizedBox(height: 20),
                 Form(
                   key: _formKey,
                   child: Column(
@@ -69,12 +96,11 @@ class _SignupScreenState extends State<SignupScreen> {
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(20),
                           ),
-                          labelText: "Name",
+                          labelText: "الاسم",
                           prefixIcon: const Icon(Icons.person),
                         ),
-                        validator: (value) {
-                          return value!.isEmpty ? "Please enter a name" : null;
-                        },
+                        validator: (value) =>
+                            value!.isEmpty ? "الرجاء ادخال اسمك" : null,
                       ),
                       const SizedBox(
                         height: 20,
@@ -82,23 +108,56 @@ class _SignupScreenState extends State<SignupScreen> {
                       //! Gender Field
                       DropdownButtonFormField(
                         isExpanded: true,
+                        validator: (value) {
+                          if (value == null) {
+                            _infoIsValid = false;
+                            return "الرجاء قم باختيار النوع";
+                          } else {
+                            return null;
+                          }
+                        },
                         decoration: InputDecoration(
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(20),
                           ),
-                          labelText: "Gender",
+                          labelText: "النوع",
                           prefixIcon: const Icon(Icons.person),
                         ),
-                        items: ["Male", "Female"]
+                        items: ["ذكر", "انثى"]
                             .map<DropdownMenuItem<String>>((String value) =>
                                 DropdownMenuItem<String>(
                                     value: value, child: Text(value)))
                             .toList(),
                         onChanged: (value) => _gender = value,
                       ),
-                      const SizedBox(
-                        height: 20,
-                      ),
+                      if (_userType == "doctor") ...[
+                        const SizedBox(height: 20),
+                        DropdownButtonFormField(
+                          isExpanded: true,
+                          validator: (value) {
+                            if (value == null) {
+                              _infoIsValid = false;
+                              return "الرجاء قم باختيار التخصص";
+                            } else {
+                              return null;
+                            }
+                          },
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            labelText: "التخصص",
+                            prefixIcon: const Icon(Icons.person),
+                          ),
+                          items: ClinicData.specialities
+                              .map<DropdownMenuItem<String>>((String value) =>
+                                  DropdownMenuItem<String>(
+                                      value: value, child: Text(value)))
+                              .toList(),
+                          onChanged: (value) => _specialization = value,
+                        ),
+                      ],
+                      const SizedBox(height: 20),
                       TextFormField(
                         keyboardType: TextInputType.emailAddress,
                         textInputAction: TextInputAction.next,
@@ -107,16 +166,14 @@ class _SignupScreenState extends State<SignupScreen> {
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(20),
                           ),
-                          labelText: "Email address",
+                          labelText: "البريد الالكتروني",
                           prefixIcon: const Icon(Icons.email),
                         ),
                         validator: (value) {
                           return checkEmail(value);
                         },
                       ),
-                      const SizedBox(
-                        height: 20,
-                      ),
+                      const SizedBox(height: 20),
                       //! Password Field
                       TextFormField(
                         obscureText: !_isPasswordVisible,
@@ -126,7 +183,7 @@ class _SignupScreenState extends State<SignupScreen> {
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(20),
                             ),
-                            labelText: "Password",
+                            labelText: "كلمة السر",
                             prefixIcon: const Icon(Icons.lock),
                             suffixIcon: IconButton(
                                 onPressed: () {
@@ -141,9 +198,7 @@ class _SignupScreenState extends State<SignupScreen> {
                           return checkPassword(value);
                         },
                       ),
-                      const SizedBox(
-                        height: 20,
-                      ),
+                      const SizedBox(height: 20),
                       //! Password confirmation Field
                       TextFormField(
                         obscureText: !_isConfPasswordVisible,
@@ -153,7 +208,7 @@ class _SignupScreenState extends State<SignupScreen> {
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(20),
                             ),
-                            labelText: "Confirm password",
+                            labelText: "تأكيد كلمة السر",
                             prefixIcon: const Icon(Icons.lock),
                             suffixIcon: IconButton(
                                 onPressed: () {
@@ -169,50 +224,33 @@ class _SignupScreenState extends State<SignupScreen> {
                           return checkConfirmationPassword(value);
                         },
                       ),
-                      const SizedBox(
-                        height: 20,
-                      ),
+                      const SizedBox(height: 20),
                     ],
                   ),
                 ),
-                CustomRadioButton(
-                  width: screenWidth * 0.4,
-                  elevation: 0,
-                  buttonTextStyle:
-                      const ButtonTextStyle(textStyle: TextStyle(fontSize: 16)),
-                  absoluteZeroSpacing: true,
-                  defaultSelected: "Patient",
-                  buttonLables: const ["Patient", "Doctor"],
-                  buttonValues: const ["Patient", "Doctor"],
-                  radioButtonValue: (value) => {_userType = value},
-                  selectedColor: ColorPallete.mainColor,
-                  unSelectedColor: Colors.white,
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
                 RoundedButton(
                   onPressed: () {
+                    _infoIsValid = true;
                     FocusScope.of(context).unfocus();
                     _formKey.currentState!.validate();
-                    _validateInput();
+                    if (_infoIsValid) {
+                      _validateInput();
+                    }
                   },
                   color: ColorPallete.mainColor,
                   isBordered: false,
                   text: const Text(
-                    "Sign Up",
+                    "تسجيل الحساب",
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                 ),
-                const SizedBox(
-                  height: 20,
-                ),
+                const SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
-                      "Already have an account? ",
+                      "عندك حساب فعلا؟ ",
                       style: TextStyle(color: ColorPallete.mainColor),
                     ),
                     TextButton(
@@ -231,13 +269,14 @@ class _SignupScreenState extends State<SignupScreen> {
                           );
                         },
                         child: const Text(
-                          "Sign In",
+                          "سجل الدخول من هنا",
                           style: TextStyle(
                               color: ColorPallete.mainColor,
                               fontWeight: FontWeight.bold),
                         ))
                   ],
                 ),
+                const SizedBox(height: 30),
               ],
             ),
           ),
@@ -246,53 +285,75 @@ class _SignupScreenState extends State<SignupScreen> {
     );
   }
 
-  void _validateInput() {
-    var response = _auth.signUp(
-      name: _name.text,
-      gender: _gender,
-      email: _email.text,
-      password: _password.text,
-      type: _userType,
+  void _validateInput() async {
+    final navigator = Navigator.of(context);
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (context) => const SpinKitSquareCircle(
+        color: Colors.white,
+        size: 100,
+      ),
     );
-    if (response == 200) {
-      Navigator.pushReplacement(
-        context,
-        PageTransition(
-          child: const HomeHandler(),
-          type: PageTransitionType.rightToLeft,
-        ),
+    try {
+      await _auth.signUp(
+        name: _name.text,
+        gender: _gender,
+        email: _email.text,
+        specialization: _specialization,
+        password: _password.text,
+        type: _userType,
       );
-    } else {
-      showErrorMessage(
-          context: context, text: "Email address already registered");
+      if (!mounted) return;
+      showDialogMessage(
+          context: context,
+          text: "تم تسجيل الحساب بنجاح",
+          color: ColorPallete.green);
+      navigator.pushReplacement(PageTransition(
+        child: const LoginScreen(),
+        type: PageTransitionType.rightToLeft,
+      ));
+    } catch (err) {
+      showDialogMessage(
+          context: context, text: err.toString(), color: ColorPallete.red);
+      Navigator.pop(context);
     }
   }
 
   String? checkEmail(value) {
     if (value == null || value.isEmpty) {
-      return "Enter Email";
+      _infoIsValid = false;
+      return "الرجاء ادخال بريد الكتروني";
     } else if (!RegExp(r"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$").hasMatch(value)) {
-      return "Enter valid Email";
+      _infoIsValid = false;
+
+      return "الرجاء ادخال بريد الكتروني صالح";
     }
     return null;
   }
 
   String? checkPassword(String? value) {
     if (value == null || value.isEmpty) {
-      return "Enter Password";
+      _infoIsValid = false;
+
+      return "الرجاء ادخال كلمة سر";
     } else if (value.length < 5) {
-      return "Enter valid Password";
+      _infoIsValid = false;
+
+      return "الرجاء ادخال كلمة سر أكثر من 5 حروف";
     }
     return null;
   }
 
   String? checkConfirmationPassword(String? value) {
     if (value == null || value.isEmpty) {
-      return "Enter Password";
-    } else if (value.length < 5) {
-      return "Enter valid Password";
+      _infoIsValid = false;
+
+      return "الرجاء ادخال كلمة سر";
     } else if (value != _password.text) {
-      return "Password didn't match";
+      _infoIsValid = false;
+
+      return "كلمة السر غير متطابقة";
     }
     return null;
   }

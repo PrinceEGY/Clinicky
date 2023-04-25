@@ -8,11 +8,13 @@ class AppointmentPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Appointments"),
-        backgroundColor: ColorPallete.mainColor,
+        automaticallyImplyLeading: false,
+        title: const Text("حجوزاتي",
+            style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
+        foregroundColor: ColorPallete.mainColor,
       ),
       body: const Center(
-        child: Text("Appointments", style: TextStyle(fontSize: 40)),
+        child: Text("حجوزاتي", style: TextStyle(fontSize: 40)),
       ),
     );
   }

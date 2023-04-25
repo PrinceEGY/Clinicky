@@ -103,8 +103,8 @@ class _NavBarState extends State<NavBar> {
   Widget build(BuildContext context) {
     return BottomAppBar(
       height: 70,
-      shape: const CircularNotchedRectangle(),
-      notchMargin: 10,
+      // shape: const CircularNotchedRectangle(),
+      // notchMargin: 10,
       child: Row(
         children: getTabs(),
       ),
