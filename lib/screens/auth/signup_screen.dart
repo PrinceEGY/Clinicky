@@ -99,8 +99,14 @@ class _SignupScreenState extends State<SignupScreen> {
                           labelText: "الاسم",
                           prefixIcon: const Icon(Icons.person),
                         ),
-                        validator: (value) =>
-                            value!.isEmpty ? "الرجاء ادخال اسمك" : null,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            _infoIsValid = false;
+                            return "الرجاء ادخال اسمك";
+                          } else {
+                            return null;
+                          }
+                        },
                       ),
                       const SizedBox(
                         height: 20,
@@ -109,7 +115,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       DropdownButtonFormField(
                         isExpanded: true,
                         validator: (value) {
-                          if (value == null) {
+                          if (value == null || value.isEmpty) {
                             _infoIsValid = false;
                             return "الرجاء قم باختيار النوع";
                           } else {
@@ -135,7 +141,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         DropdownButtonFormField(
                           isExpanded: true,
                           validator: (value) {
-                            if (value == null) {
+                            if (value == null || value.isEmpty) {
                               _infoIsValid = false;
                               return "الرجاء قم باختيار التخصص";
                             } else {
@@ -169,9 +175,7 @@ class _SignupScreenState extends State<SignupScreen> {
                           labelText: "البريد الالكتروني",
                           prefixIcon: const Icon(Icons.email),
                         ),
-                        validator: (value) {
-                          return checkEmail(value);
-                        },
+                        validator: (value) => checkEmail(value),
                       ),
                       const SizedBox(height: 20),
                       //! Password Field
@@ -194,9 +198,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                 icon: Icon(_isPasswordVisible != true
                                     ? Icons.visibility_off
                                     : Icons.visibility))),
-                        validator: (value) {
-                          return checkPassword(value);
-                        },
+                        validator: (value) => checkPassword(value),
                       ),
                       const SizedBox(height: 20),
                       //! Password confirmation Field
@@ -220,9 +222,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                 icon: Icon(_isConfPasswordVisible != true
                                     ? Icons.visibility_off
                                     : Icons.visibility))),
-                        validator: (value) {
-                          return checkConfirmationPassword(value);
-                        },
+                        validator: (value) => checkConfirmationPassword(value),
                       ),
                       const SizedBox(height: 20),
                     ],
@@ -286,7 +286,6 @@ class _SignupScreenState extends State<SignupScreen> {
   }
 
   void _validateInput() async {
-    final navigator = Navigator.of(context);
     showDialog(
       barrierDismissible: false,
       context: context,
@@ -309,10 +308,12 @@ class _SignupScreenState extends State<SignupScreen> {
           context: context,
           text: "تم تسجيل الحساب بنجاح",
           color: ColorPallete.green);
-      navigator.pushReplacement(PageTransition(
-        child: const LoginScreen(),
-        type: PageTransitionType.rightToLeft,
-      ));
+      Navigator.pushReplacement(
+          context,
+          PageTransition(
+            child: const LoginScreen(),
+            type: PageTransitionType.rightToLeft,
+          ));
     } catch (err) {
       showDialogMessage(
           context: context, text: err.toString(), color: ColorPallete.red);

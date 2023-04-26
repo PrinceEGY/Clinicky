@@ -1,8 +1,6 @@
-import 'dart:convert';
 import 'package:clinicky/backend/backend_controller.dart';
 import 'package:clinicky/models/user_data.dart';
 import 'package:clinicky/util/color_pallete.dart';
-import 'package:clinicky/util/widgets/error_popup.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 

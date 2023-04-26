@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:clinicky/models/clinic_data.dart';
 import 'package:clinicky/models/user_data.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -45,7 +46,7 @@ class BackendController {
         await prefs.setString("userToken", _token!);
       }
     } else {
-      throw HttpException(jsonDecode(response.body)['message']);
+      throw Exception(jsonDecode(response.body)['message']);
     }
   }
 
@@ -75,7 +76,7 @@ class BackendController {
     if (response.statusCode == 200) {
       debugPrint("Signed up successfully");
     } else {
-      throw HttpException(jsonDecode(response.body)['message']);
+      throw Exception(jsonDecode(response.body)['message']);
     }
   }
 
@@ -92,10 +93,48 @@ class BackendController {
     if (response.statusCode == 200) {
       debugPrint("Data loaded successfully");
     } else {
-      throw HttpException(jsonDecode(response.body)['message']);
+      throw Exception(jsonDecode(response.body)['message']);
     }
 
     return UserData.fromJson(jsonDecode(response.body));
+  }
+
+  Future<void> addNewClinic({required ClinicData clinicData}) async {
+    var route = "/api/clinicks";
+    var response = await http.post(
+      Uri.parse(hostDomain + route),
+      headers: {
+        "Content-Type": "application/json",
+        "x-auth-token": _token!,
+        "Authorization": "Bearer $_token",
+      },
+      body: jsonEncode(clinicData.toJson()),
+    );
+    if (response.statusCode == 200) {
+      debugPrint("Clinic added successfully");
+    } else {
+      throw Exception(jsonDecode(response.body)['message']);
+    }
+  }
+
+  Future<Type> getDoctorClinics() async {
+    var route = "/api/clinicks";
+
+    var response = await http.get(
+      Uri.parse(hostDomain + route),
+      headers: {
+        "Content-Type": "application/json",
+        "x-auth-token": _token!,
+        "Authorization": "Bearer $_token",
+      },
+    );
+    if (response.statusCode == 200) {
+      debugPrint("Data loaded successfully");
+    } else {
+      throw Exception(jsonDecode(response.body)['message']);
+    }
+    return List;
+    // return UserData.fromJson(jsonDecode(response.body));
   }
 
   String? _getTokenFromResponse(Response response) {
@@ -118,9 +157,9 @@ class BackendController {
   }
 }
 
-class HttpException implements Exception {
+class Exception {
   final String message;
-  HttpException(this.message);
+  Exception(this.message);
 
   @override
   String toString() {

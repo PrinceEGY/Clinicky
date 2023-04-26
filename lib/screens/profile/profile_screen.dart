@@ -30,7 +30,7 @@ class _ProfilePageState extends State<ProfilePage> {
     return FutureBuilder(
       future: futureUserData,
       builder: (context, AsyncSnapshot snapshot) {
-        if (snapshot.hasData) {
+        if (snapshot.connectionState == ConnectionState.done) {
           UserData userData = snapshot.data;
           return SafeArea(
             child: Scaffold(
