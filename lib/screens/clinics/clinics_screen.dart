@@ -1,3 +1,4 @@
+import 'package:clinicky/backend/backend_controller.dart';
 import 'package:clinicky/util/color_pallete.dart';
 import 'package:flutter/material.dart';
 
@@ -26,14 +27,14 @@ class _ClinicsPageState extends State<ClinicsPage> {
             width: screenWidth,
             child: SingleChildScrollView(
               padding: const EdgeInsets.all(20),
-              child: Row(
-                children: [
-                  const SizedBox(width: 10),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [],
-                  ),
-                ],
+              child: Card(
+                color: ColorPallete.secondaryColor,
+                child: Column(children: [
+                  ElevatedButton(
+                      onPressed: () =>
+                          BackendController.instance.getDoctorClinics(),
+                      child: const Text("Show Clinics"))
+                ]),
               ),
             ),
           ),

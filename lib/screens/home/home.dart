@@ -52,7 +52,7 @@ class _HomePageState extends State<HomePage> {
                         children: [
                           const Text("أهلا بيك \u{1F44B}"),
                           Text(
-                            userData.name,
+                            userData.name!,
                             style: const TextStyle(fontWeight: FontWeight.bold),
                           ),
                         ],

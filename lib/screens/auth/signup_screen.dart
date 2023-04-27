@@ -1,5 +1,6 @@
 import 'package:clinicky/backend/backend_controller.dart';
 import 'package:clinicky/models/clinic_data.dart';
+import 'package:clinicky/models/user_data.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:clinicky/screens/auth/login_screen.dart';
 import 'package:clinicky/util/color_pallete.dart';
@@ -295,14 +296,26 @@ class _SignupScreenState extends State<SignupScreen> {
       ),
     );
     try {
-      await _auth.signUp(
-        name: _name.text,
-        gender: _gender,
-        email: _email.text,
-        specialization: _specialization,
-        password: _password.text,
-        type: _userType,
-      );
+      UserData userData;
+      if (_userType == "doctor") {
+        userData = DoctorData(
+          name: _name.text,
+          password: _password.text,
+          email: _email.text,
+          gender: _gender!,
+          specialization: _specialization!,
+          type: _userType,
+        );
+      } else {
+        userData = UserData(
+          name: _name.text,
+          password: _password.text,
+          email: _email.text,
+          gender: _gender!,
+          type: _userType,
+        );
+      }
+      await _auth.signUp(userData: userData);
       if (!mounted) return;
       showDialogMessage(
           context: context,

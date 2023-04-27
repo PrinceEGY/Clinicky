@@ -40,38 +40,27 @@ class BackendController {
     );
     if (response.statusCode == 200) {
       debugPrint("Singed In successfuly");
+      UserData userData = UserData.fromJson(jsonDecode(response.body));
       _token = _getTokenFromResponse(response)!;
       if (keepSingedIn) {
         SharedPreferences prefs = await SharedPreferences.getInstance();
         await prefs.setString("userToken", _token!);
+        await prefs.setString("userName", userData.name!);
+        await prefs.setString("userType", userData.type!);
+        await prefs.setString("userGender", userData.gender!);
       }
     } else {
       throw Exception(jsonDecode(response.body)['message']);
     }
   }
 
-  Future<void> signUp(
-      {required name,
-      required gender,
-      required email,
-      required password,
-      specialization,
-      required type}) async {
-    var jsonObject = jsonEncode({
-      "name": name,
-      "gender": gender,
-      "email": email,
-      "password": password,
-      if (type == "doctor") "specialization": specialization,
-      "type": type,
-    });
-
+  Future<void> signUp({required UserData userData}) async {
     var route = "/api/user/signup";
 
     var response = await http.post(
       Uri.parse(hostDomain + route),
       headers: {"Content-Type": "application/json"},
-      body: jsonObject,
+      body: jsonEncode(userData.toJson()),
     );
     if (response.statusCode == 200) {
       debugPrint("Signed up successfully");
@@ -117,7 +106,7 @@ class BackendController {
     }
   }
 
-  Future<Type> getDoctorClinics() async {
+  Future<List<ClinicData>> getDoctorClinics() async {
     var route = "/api/clinicks";
 
     var response = await http.get(
@@ -133,8 +122,9 @@ class BackendController {
     } else {
       throw Exception(jsonDecode(response.body)['message']);
     }
-    return List;
-    // return UserData.fromJson(jsonDecode(response.body));
+    return (jsonDecode(response.body)
+        .map<ClinicData>((value) => ClinicData.fromJson(value))
+        .toList());
   }
 
   String? _getTokenFromResponse(Response response) {
@@ -148,12 +138,15 @@ class BackendController {
 
   setToken() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    BackendController()._token = prefs.getString("userToken");
+    BackendController.instance._token = prefs.getString("userToken");
   }
 
-  clearToken() async {
+  clearUserData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.remove("userToken");
+    prefs.remove("userName");
+    prefs.remove("userType");
+    prefs.remove("userGender");
   }
 }
 

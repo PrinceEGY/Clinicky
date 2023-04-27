@@ -26,7 +26,7 @@ class ClinicData {
   String? specialization;
   String? price;
   String? about;
-  List<String>? availableDays;
+  List? availableDays;
   List<TimeOfDay?>? availableTimeSlots;
   int? rating = 0;
 
@@ -43,18 +43,18 @@ class ClinicData {
       this.rating});
 
   ClinicData.fromJson(Map<String, dynamic> json) {
-    sId = json['_id'];
+    sId = json['id'];
     clinicName = json['clinicName'];
     phone = json['phone'];
     location = json['location'];
     specialization = json['specialization'];
     price = json['price'];
     about = json['about'];
-    availableDays = json['openDates']['days'];
-    availableTimeSlots = json["openDates"]['time'].map((value) {
+    availableDays = json['openDates']['days'].cast<String>();
+    availableTimeSlots = json["openDates"]['time'].map<TimeOfDay>((value) {
       var time = value.split(":");
-      TimeOfDay(hour: time[0], minute: time[1]);
-    });
+      return TimeOfDay(hour: int.parse(time[0]), minute: int.parse(time[1]));
+    }).toList();
     rating = json['rating'];
   }
 

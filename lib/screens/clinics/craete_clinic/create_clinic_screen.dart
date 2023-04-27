@@ -256,7 +256,7 @@ class _CreateClinicPageState extends State<CreateClinicPage> {
                     buttonValues: availableTimeSlots,
                     buttonLables: availableTimeSlots
                         .map((value) =>
-                            "${value!.hour}:${value.minute.toString().padLeft(2, "0")} \u274C")
+                            "${value!.hour.toString().padLeft(2, "0")}:${value.minute.toString().padLeft(2, "0")} \u274C")
                         .toList(),
                     radioButtonValue: (value) {
                       availableTimeSlots.remove(value);

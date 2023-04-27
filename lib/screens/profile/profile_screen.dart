@@ -57,14 +57,14 @@ class _ProfilePageState extends State<ProfilePage> {
                         height: 15,
                       ),
                       Text(
-                        userData.name,
+                        userData.name!,
                         style: const TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 25),
                       ),
                       const SizedBox(height: 25),
                       InkWell(
                         onTap: () {
-                          request.clearToken();
+                          request.clearUserData();
                           Navigator.pushReplacement(
                             context,
                             PageTransition(
