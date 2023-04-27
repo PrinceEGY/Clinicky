@@ -41,57 +41,54 @@ class _ProfilePageState extends State<ProfilePage> {
                         TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
                 foregroundColor: ColorPallete.mainColor,
               ),
-              body: SizedBox(
-                width: screenWidth,
-                child: SingleChildScrollView(
-                  padding: const EdgeInsets.all(20),
-                  child: Column(
-                    children: [
-                      CircleAvatar(
-                        radius: 50,
-                        backgroundImage: AssetImage(userData.gender == "ذكر"
-                            ? "assets/images/male.png"
-                            : "assets/images/female.png"),
+              body: SingleChildScrollView(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  children: [
+                    CircleAvatar(
+                      radius: 50,
+                      backgroundImage: AssetImage(userData.gender == "ذكر"
+                          ? "assets/images/male.png"
+                          : "assets/images/female.png"),
+                    ),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    Text(
+                      userData.name!,
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 25),
+                    ),
+                    const SizedBox(height: 25),
+                    InkWell(
+                      onTap: () {
+                        request.clearUserData();
+                        Navigator.pushReplacement(
+                          context,
+                          PageTransition(
+                            child: const LoginScreen(),
+                            type: PageTransitionType.rightToLeft,
+                          ),
+                        );
+                      },
+                      child: Row(
+                        children: const [
+                          Icon(
+                            Icons.logout,
+                            color: ColorPallete.red,
+                          ),
+                          SizedBox(width: 10),
+                          Text(
+                            "تسجيل الخروج",
+                            style: TextStyle(
+                                color: ColorPallete.red,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18),
+                          )
+                        ],
                       ),
-                      const SizedBox(
-                        height: 15,
-                      ),
-                      Text(
-                        userData.name!,
-                        style: const TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 25),
-                      ),
-                      const SizedBox(height: 25),
-                      InkWell(
-                        onTap: () {
-                          request.clearUserData();
-                          Navigator.pushReplacement(
-                            context,
-                            PageTransition(
-                              child: const LoginScreen(),
-                              type: PageTransitionType.rightToLeft,
-                            ),
-                          );
-                        },
-                        child: Row(
-                          children: const [
-                            Icon(
-                              Icons.logout,
-                              color: ColorPallete.red,
-                            ),
-                            SizedBox(width: 10),
-                            Text(
-                              "تسجيل الخروج",
-                              style: TextStyle(
-                                  color: ColorPallete.red,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18),
-                            )
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ),

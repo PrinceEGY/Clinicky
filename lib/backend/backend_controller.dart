@@ -80,7 +80,7 @@ class BackendController {
       },
     );
     if (response.statusCode == 200) {
-      debugPrint("Data loaded successfully");
+      debugPrint("User Data fetched successfully");
     } else {
       throw Exception(jsonDecode(response.body)['message']);
     }
@@ -118,13 +118,14 @@ class BackendController {
       },
     );
     if (response.statusCode == 200) {
-      debugPrint("Data loaded successfully");
+      debugPrint("Clinics Data fetched successfully");
     } else {
       throw Exception(jsonDecode(response.body)['message']);
     }
-    return (jsonDecode(response.body)
+
+    return jsonDecode(response.body)
         .map<ClinicData>((value) => ClinicData.fromJson(value))
-        .toList());
+        .toList();
   }
 
   String? _getTokenFromResponse(Response response) {

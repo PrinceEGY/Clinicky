@@ -8,7 +8,8 @@ class RoundedButton extends StatelessWidget {
     this.onPressed,
     this.textColor = Colors.white,
     this.color = ColorPallete.mainColor,
-    this.width = 50,
+    this.width = 100,
+    this.height = 40,
     this.isBordered = false,
   });
 
@@ -17,6 +18,7 @@ class RoundedButton extends StatelessWidget {
   final Color textColor, color;
   final bool isBordered;
   final double width;
+  final double height;
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +31,7 @@ class RoundedButton extends StatelessWidget {
               },
               style: ElevatedButton.styleFrom(
                   foregroundColor: color,
-                  minimumSize: Size(double.infinity, width),
+                  minimumSize: Size(width, height),
                   side: BorderSide(color: color),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(32.0))),
@@ -39,7 +41,7 @@ class RoundedButton extends StatelessWidget {
                 onPressed!();
               },
               style: ElevatedButton.styleFrom(
-                  minimumSize: Size(double.infinity, width),
+                  minimumSize: Size(width, height),
                   backgroundColor: color,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(32.0))),

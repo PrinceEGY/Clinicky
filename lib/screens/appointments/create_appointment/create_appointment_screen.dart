@@ -6,14 +6,16 @@ class CreateAppointmentPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("إنشاء موعد جديد",
-            style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
-        foregroundColor: ColorPallete.mainColor,
-      ),
-      body: const Center(
-        child: Text("إنشاء موعد جديد", style: TextStyle(fontSize: 40)),
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text("إنشاء موعد جديد",
+              style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
+          foregroundColor: ColorPallete.mainColor,
+        ),
+        body: const Center(
+          child: Text("إنشاء موعد جديد", style: TextStyle(fontSize: 40)),
+        ),
       ),
     );
   }

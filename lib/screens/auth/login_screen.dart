@@ -35,152 +35,147 @@ class _LoginScreenState extends State<LoginScreen> {
     final screenHeight = MediaQuery.of(context).size.height;
     return SafeArea(
       child: Scaffold(
-        body: SizedBox(
-          height: screenHeight,
-          width: screenWidth,
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(20),
-            child: SizedBox(
-              height: screenHeight * 0.9,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            children: [
+              const Text(
+                "تسجيل الدخول",
+                style: TextStyle(
+                  fontSize: 25,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Lottie.asset('assets/animations/login.json',
+                  height: screenHeight * 0.4, width: screenWidth * 0.7),
+              CustomRadioButton(
+                width: screenWidth * 0.4,
+                elevation: 0,
+                buttonTextStyle:
+                    const ButtonTextStyle(textStyle: TextStyle(fontSize: 16)),
+                absoluteZeroSpacing: true,
+                defaultSelected: "patient",
+                buttonLables: const ["زائر", "طبيب"],
+                buttonValues: const ["patient", "doctor"],
+                radioButtonValue: (value) => {_userType = value},
+                selectedColor: ColorPallete.mainColor,
+                unSelectedColor: Colors.white,
+              ),
+              const SizedBox(height: 20),
+              Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    //! Email Field
+                    TextFormField(
+                      keyboardType: TextInputType.emailAddress,
+                      textInputAction: TextInputAction.next,
+                      controller: _email,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        labelText: "البريد الالكتروني",
+                        prefixIcon: const Icon(Icons.email),
+                      ),
+                      validator: (value) {
+                        return checkEmail(value);
+                      },
+                    ),
+                    const SizedBox(height: 20),
+                    //! Password Field
+                    TextFormField(
+                      obscureText: !_isPasswordVisible,
+                      textInputAction: TextInputAction.go,
+                      controller: _password,
+                      decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          labelText: "كلمة السر",
+                          prefixIcon: const Icon(Icons.lock),
+                          suffixIcon: IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  _isPasswordVisible = !_isPasswordVisible;
+                                });
+                              },
+                              icon: Icon(_isPasswordVisible != true
+                                  ? Icons.visibility_off
+                                  : Icons.visibility))),
+                      validator: (value) {
+                        return checkPassword(value);
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              Row(
                 children: [
-                  const Text(
-                    "تسجيل الدخول",
-                    style: TextStyle(
-                      fontSize: 25,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Lottie.asset('assets/animations/login.json',
-                      height: screenHeight * 0.4, width: screenWidth * 0.7),
-                  CustomRadioButton(
-                    width: screenWidth * 0.4,
-                    elevation: 0,
-                    buttonTextStyle: const ButtonTextStyle(
-                        textStyle: TextStyle(fontSize: 16)),
-                    absoluteZeroSpacing: true,
-                    defaultSelected: "patient",
-                    buttonLables: const ["زائر", "طبيب"],
-                    buttonValues: const ["patient", "doctor"],
-                    radioButtonValue: (value) => {_userType = value},
-                    selectedColor: ColorPallete.mainColor,
-                    unSelectedColor: Colors.white,
-                  ),
-                  Form(
-                    key: _formKey,
-                    child: Column(
-                      children: [
-                        //! Email Field
-                        TextFormField(
-                          keyboardType: TextInputType.emailAddress,
-                          textInputAction: TextInputAction.next,
-                          controller: _email,
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            labelText: "البريد الالكتروني",
-                            prefixIcon: const Icon(Icons.email),
-                          ),
-                          validator: (value) {
-                            return checkEmail(value);
-                          },
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        //! Password Field
-                        TextFormField(
-                          obscureText: !_isPasswordVisible,
-                          textInputAction: TextInputAction.go,
-                          controller: _password,
-                          decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              labelText: "كلمة السر",
-                              prefixIcon: const Icon(Icons.lock),
-                              suffixIcon: IconButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      _isPasswordVisible = !_isPasswordVisible;
-                                    });
-                                  },
-                                  icon: Icon(_isPasswordVisible != true
-                                      ? Icons.visibility_off
-                                      : Icons.visibility))),
-                          validator: (value) {
-                            return checkPassword(value);
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                  Row(
-                    children: [
-                      Checkbox(
-                          activeColor: ColorPallete.mainColor,
-                          value: _keepSignedIn,
-                          onChanged: (value) => setState(() {
-                                _keepSignedIn = value!;
-                              })),
-                      const Text("حفظ تسجيل الدخول"),
-                    ],
-                  ),
-                  RoundedButton(
-                    onPressed: () {
-                      _infoIsValid = true;
-                      FocusScope.of(context).unfocus();
-                      _formKey.currentState!.validate();
-                      if (_infoIsValid) {
-                        _validateInput();
-                      }
-                    },
-                    color: ColorPallete.mainColor,
-                    isBordered: false,
-                    text: const Text(
-                      "تسجيل الدخول",
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        "معندكش حساب ؟ ",
-                        style: TextStyle(color: ColorPallete.mainColor),
-                      ),
-                      TextButton(
-                          style: TextButton.styleFrom(
-                            padding: EdgeInsets.zero,
-                            minimumSize: Size.zero,
-                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                          ),
-                          onPressed: () {
-                            Navigator.pushReplacement(
-                              context,
-                              PageTransition(
-                                child: const SignupScreen(),
-                                type: PageTransitionType.rightToLeft,
-                              ),
-                            );
-                          },
-                          child: const Text(
-                            "سجل من هنا",
-                            style: TextStyle(
-                                color: ColorPallete.mainColor,
-                                fontWeight: FontWeight.bold),
-                          ))
-                    ],
-                  ),
+                  Checkbox(
+                      activeColor: ColorPallete.mainColor,
+                      value: _keepSignedIn,
+                      onChanged: (value) => setState(() {
+                            _keepSignedIn = value!;
+                          })),
+                  const Text("حفظ تسجيل الدخول"),
                 ],
               ),
-            ),
+              const SizedBox(height: 10),
+              RoundedButton(
+                width: double.infinity,
+                height: 45,
+                onPressed: () {
+                  _infoIsValid = true;
+                  FocusScope.of(context).unfocus();
+                  _formKey.currentState!.validate();
+                  if (_infoIsValid) {
+                    _validateInput();
+                  }
+                },
+                color: ColorPallete.mainColor,
+                isBordered: false,
+                text: const Text(
+                  "تسجيل الدخول",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    "معندكش حساب ؟ ",
+                    style: TextStyle(color: ColorPallete.mainColor),
+                  ),
+                  TextButton(
+                      style: TextButton.styleFrom(
+                        padding: EdgeInsets.zero,
+                        minimumSize: Size.zero,
+                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      ),
+                      onPressed: () {
+                        Navigator.pushReplacement(
+                          context,
+                          PageTransition(
+                            child: const SignupScreen(),
+                            type: PageTransitionType.rightToLeft,
+                          ),
+                        );
+                      },
+                      child: const Text(
+                        "سجل من هنا",
+                        style: TextStyle(
+                            color: ColorPallete.mainColor,
+                            fontWeight: FontWeight.bold),
+                      ))
+                ],
+              ),
+            ],
           ),
         ),
       ),
@@ -192,7 +187,7 @@ class _LoginScreenState extends State<LoginScreen> {
     showDialog(
       barrierDismissible: false,
       context: context,
-      builder: (context) => const SpinKitSquareCircle(
+      builder: (context) => const SpinKitCircle(
         color: Colors.white,
         size: 100,
       ),

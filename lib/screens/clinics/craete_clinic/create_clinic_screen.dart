@@ -29,266 +29,259 @@ class _CreateClinicPageState extends State<CreateClinicPage> {
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final screenHeight = MediaQuery.of(context).size.height;
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("انشاء عيادة جديدة",
-            style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
-        foregroundColor: ColorPallete.mainColor,
-      ),
-      body: SafeArea(
-        child: Scaffold(
-          body: SizedBox(
-            width: screenWidth,
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                children: [
-                  Form(
-                    key: _formKey,
-                    child: Column(
-                      children: [
-                        //! Name Field
-                        TextFormField(
-                            keyboardType: TextInputType.name,
-                            textInputAction: TextInputAction.next,
-                            controller: _name,
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              labelText: "اسم العيادة",
-                              prefixIcon: const Icon(Icons.apartment),
-                            ),
-                            validator: (value) {
-                              if (value == null ||
-                                  value.isEmpty ||
-                                  value.length < 3) {
-                                _infoIsValid = false;
-                                return "الرجاء قم بادخال اسم صحيح";
-                              } else {
-                                return null;
-                              }
-                            }),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        //! phone Field
-                        TextFormField(
-                          keyboardType: TextInputType.phone,
-                          textInputAction: TextInputAction.next,
-                          controller: _phone,
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            labelText: "رقم التلفون",
-                            prefixIcon: const Icon(Icons.phone),
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text("انشاء عيادة جديدة",
+              style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
+          foregroundColor: ColorPallete.mainColor,
+        ),
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            children: [
+              Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    //! Name Field
+                    TextFormField(
+                        keyboardType: TextInputType.name,
+                        textInputAction: TextInputAction.next,
+                        controller: _name,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20),
                           ),
-                          validator: (value) => checkPhone(value),
+                          labelText: "اسم العيادة",
+                          prefixIcon: const Icon(Icons.apartment),
                         ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        //! Location Field
-                        TextFormField(
-                          keyboardType: TextInputType.streetAddress,
-                          textInputAction: TextInputAction.next,
-                          controller: _location,
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            labelText: "عنوان العيادة",
-                            prefixIcon: const Icon(Icons.location_on),
-                          ),
-                          validator: (value) {
-                            if (value == null ||
-                                value.isEmpty ||
-                                value.length < 3) {
-                              _infoIsValid = false;
-                              return "الرجاء قم بادخال عنوان صحيح";
-                            } else {
-                              return null;
-                            }
-                          },
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        //! Price Field
-                        TextFormField(
-                            keyboardType: const TextInputType.numberWithOptions(
-                                signed: false),
-                            textInputAction: TextInputAction.next,
-                            controller: _price,
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              labelText: "سعر الكشف",
-                              prefixIcon: const Icon(Icons.attach_money),
-                            ),
-                            validator: (value) {
-                              if (value == null ||
-                                  value.isEmpty ||
-                                  value.startsWith("-")) {
-                                _infoIsValid = false;
-                                return "الرجاء قم بادخال رقم صحيح";
-                              } else {
-                                return null;
-                              }
-                            }),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        DropdownButtonFormField(
-                          isExpanded: true,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              _infoIsValid = false;
-                              return "الرجاء قم باختيار التخصص";
-                            } else {
-                              return null;
-                            }
-                          },
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            labelText: "التخصص",
-                            prefixIcon: const Icon(Icons.person),
-                          ),
-                          items: ClinicData.specialities
-                              .map<DropdownMenuItem<String>>((String value) =>
-                                  DropdownMenuItem<String>(
-                                      value: value, child: Text(value)))
-                              .toList(),
-                          onChanged: (value) => _specialization = value,
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        //! Description Field
-                        TextFormField(
-                          keyboardType: TextInputType.multiline,
-                          maxLines: null,
-                          textInputAction: TextInputAction.newline,
-                          controller: _description,
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            labelText: "وصف العيادة",
-                            prefixIcon: const Icon(Icons.description),
-                          ),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              _infoIsValid = false;
-                              return "الرجاء قم بادخال وصف للعيادة";
-                            } else {
-                              return null;
-                            }
-                          },
-                        ),
-                      ],
+                        validator: (value) {
+                          if (value == null ||
+                              value.isEmpty ||
+                              value.length < 3) {
+                            _infoIsValid = false;
+                            return "الرجاء قم بادخال اسم صحيح";
+                          } else {
+                            return null;
+                          }
+                        }),
+                    const SizedBox(
+                      height: 20,
                     ),
-                  ),
-                  const Divider(
-                    height: 40,
-                    color: ColorPallete.mainColor,
-                  ),
-                  const Text(
-                    "ايه الأيام اللي العيادة هتكون متاحة فيها؟",
-                    style: TextStyle(fontSize: 18),
-                  ),
-                  const SizedBox(height: 10),
-                  CustomCheckBoxGroup(
-                    wrapAlignment: WrapAlignment.center,
-                    enableButtonWrap: true,
-                    buttonValuesList: const [
-                      "Saturday",
-                      "Sunday",
-                      "Monday",
-                      "Tuesday",
-                      "Wednesday",
-                      "Thursday",
-                      "Friday"
-                    ],
-                    buttonLables: const [
-                      "السبت",
-                      "الأحد",
-                      "الإثنين",
-                      "الثلاثاء",
-                      "الأربعاء",
-                      "الخميس",
-                      "الجمعة"
-                    ],
-                    checkBoxButtonValues: (values) {
-                      availableDays = values;
-                    },
-                    selectedColor: ColorPallete.mainColor,
-                    unSelectedColor: Colors.white,
-                  ),
-                  const Divider(
-                    height: 40,
-                    color: ColorPallete.mainColor,
-                  ),
-                  const Text(
-                    "ايه المواعيد اللي العيادة هتكون متاحة فيها؟",
-                    style: TextStyle(fontSize: 18),
-                  ),
-                  const SizedBox(height: 10),
-                  ElevatedButton(
-                    onPressed: () async {
-                      var time = await addTimeSlot();
-                      setState(() {
-                        if (time != null) availableTimeSlots.add(time);
-                      });
-                    },
-                    child: const Text("اضافة موعد جديد"),
-                  ),
-                  CustomRadioButton(
-                    wrapAlignment: WrapAlignment.center,
-                    elevation: 0,
-                    enableButtonWrap: true,
-                    buttonValues: availableTimeSlots,
-                    buttonLables: availableTimeSlots
-                        .map((value) =>
-                            "${value!.hour.toString().padLeft(2, "0")}:${value.minute.toString().padLeft(2, "0")} \u274C")
-                        .toList(),
-                    radioButtonValue: (value) {
-                      availableTimeSlots.remove(value);
-                    },
-                    buttonTextStyle: const ButtonTextStyle(
-                      textStyle: TextStyle(fontFamily: "roboto"),
+                    //! phone Field
+                    TextFormField(
+                      keyboardType: TextInputType.phone,
+                      textInputAction: TextInputAction.next,
+                      controller: _phone,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        labelText: "رقم التلفون",
+                        prefixIcon: const Icon(Icons.phone),
+                      ),
+                      validator: (value) => checkPhone(value),
                     ),
-                    selectedColor: Colors.white,
-                    unSelectedColor: Colors.white,
-                  ),
-                ],
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    //! Location Field
+                    TextFormField(
+                      keyboardType: TextInputType.streetAddress,
+                      textInputAction: TextInputAction.next,
+                      controller: _location,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        labelText: "عنوان العيادة",
+                        prefixIcon: const Icon(Icons.location_on),
+                      ),
+                      validator: (value) {
+                        if (value == null ||
+                            value.isEmpty ||
+                            value.length < 3) {
+                          _infoIsValid = false;
+                          return "الرجاء قم بادخال عنوان صحيح";
+                        } else {
+                          return null;
+                        }
+                      },
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    //! Price Field
+                    TextFormField(
+                        keyboardType: const TextInputType.numberWithOptions(
+                            signed: false),
+                        textInputAction: TextInputAction.next,
+                        controller: _price,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          labelText: "سعر الكشف",
+                          prefixIcon: const Icon(Icons.attach_money),
+                        ),
+                        validator: (value) {
+                          if (value == null ||
+                              value.isEmpty ||
+                              value.startsWith("-")) {
+                            _infoIsValid = false;
+                            return "الرجاء قم بادخال رقم صحيح";
+                          } else {
+                            return null;
+                          }
+                        }),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    DropdownButtonFormField(
+                      isExpanded: true,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          _infoIsValid = false;
+                          return "الرجاء قم باختيار التخصص";
+                        } else {
+                          return null;
+                        }
+                      },
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        labelText: "التخصص",
+                        prefixIcon: const Icon(Icons.person),
+                      ),
+                      items: ClinicData.specialities
+                          .map<DropdownMenuItem<String>>((String value) =>
+                              DropdownMenuItem<String>(
+                                  value: value, child: Text(value)))
+                          .toList(),
+                      onChanged: (value) => _specialization = value,
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    //! Description Field
+                    TextFormField(
+                      keyboardType: TextInputType.multiline,
+                      maxLines: null,
+                      textInputAction: TextInputAction.newline,
+                      controller: _description,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        labelText: "وصف العيادة",
+                        prefixIcon: const Icon(Icons.description),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          _infoIsValid = false;
+                          return "الرجاء قم بادخال وصف للعيادة";
+                        } else {
+                          return null;
+                        }
+                      },
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ),
-          bottomNavigationBar: Container(
-            padding: const EdgeInsets.all(20),
-            child: ElevatedButton(
-                style:
-                    ElevatedButton.styleFrom(padding: const EdgeInsets.all(12)),
-                onPressed: () {
-                  _infoIsValid = true;
-                  FocusScope.of(context).unfocus();
-                  _formKey.currentState!.validate();
-                  if (_infoIsValid) {
-                    _validateInput();
-                  }
+              const Divider(
+                height: 40,
+                color: ColorPallete.mainColor,
+              ),
+              const Text(
+                "ايه الأيام اللي العيادة هتكون متاحة فيها؟",
+                style: TextStyle(fontSize: 18),
+              ),
+              const SizedBox(height: 10),
+              CustomCheckBoxGroup(
+                wrapAlignment: WrapAlignment.center,
+                enableButtonWrap: true,
+                buttonValuesList: const [
+                  "Saturday",
+                  "Sunday",
+                  "Monday",
+                  "Tuesday",
+                  "Wednesday",
+                  "Thursday",
+                  "Friday"
+                ],
+                buttonLables: const [
+                  "السبت",
+                  "الأحد",
+                  "الإثنين",
+                  "الثلاثاء",
+                  "الأربعاء",
+                  "الخميس",
+                  "الجمعة"
+                ],
+                checkBoxButtonValues: (values) {
+                  availableDays = values;
                 },
-                child: const Text(
-                  "اضافة العيادة",
-                  style: TextStyle(fontSize: 18),
-                )),
+                selectedColor: ColorPallete.mainColor,
+                unSelectedColor: Colors.white,
+              ),
+              const Divider(
+                height: 40,
+                color: ColorPallete.mainColor,
+              ),
+              const Text(
+                "ايه المواعيد اللي العيادة هتكون متاحة فيها؟",
+                style: TextStyle(fontSize: 18),
+              ),
+              const SizedBox(height: 10),
+              ElevatedButton(
+                onPressed: () async {
+                  var time = await addTimeSlot();
+                  setState(() {
+                    if (time != null) availableTimeSlots.add(time);
+                  });
+                },
+                child: const Text("اضافة موعد جديد"),
+              ),
+              CustomRadioButton(
+                wrapAlignment: WrapAlignment.center,
+                elevation: 0,
+                enableButtonWrap: true,
+                buttonValues: availableTimeSlots,
+                buttonLables: availableTimeSlots
+                    .map((value) =>
+                        "${value!.hour.toString().padLeft(2, "0")}:${value.minute.toString().padLeft(2, "0")} \u274C")
+                    .toList(),
+                radioButtonValue: (value) {
+                  availableTimeSlots.remove(value);
+                },
+                buttonTextStyle: const ButtonTextStyle(
+                  textStyle: TextStyle(fontFamily: "roboto"),
+                ),
+                selectedColor: Colors.white,
+                unSelectedColor: Colors.white,
+              ),
+            ],
           ),
+        ),
+        bottomNavigationBar: Container(
+          padding: const EdgeInsets.all(20),
+          child: ElevatedButton(
+              style:
+                  ElevatedButton.styleFrom(padding: const EdgeInsets.all(12)),
+              onPressed: () {
+                _infoIsValid = true;
+                FocusScope.of(context).unfocus();
+                _formKey.currentState!.validate();
+                if (_infoIsValid) {
+                  _validateInput();
+                }
+              },
+              child: const Text(
+                "اضافة العيادة",
+                style: TextStyle(fontSize: 18),
+              )),
         ),
       ),
     );

@@ -28,37 +28,34 @@ class _HomePageState extends State<HomePage> {
     return FutureBuilder(
       future: futureUserData,
       builder: (context, AsyncSnapshot snapshot) {
-        if (snapshot.hasData) {
+        if (snapshot.connectionState == ConnectionState.done) {
           UserData userData = snapshot.data;
           return SafeArea(
             child: Scaffold(
-              body: SizedBox(
-                width: screenWidth,
-                child: SingleChildScrollView(
-                  padding: const EdgeInsets.all(20),
-                  child: Row(
-                    children: [
-                      CircleAvatar(
-                        radius: 25,
-                        backgroundImage: AssetImage(userData.gender == "ذكر"
-                            ? "assets/images/male.png"
-                            : "assets/images/female.png"),
-                      ),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text("أهلا بيك \u{1F44B}"),
-                          Text(
-                            userData.name!,
-                            style: const TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
+              body: SingleChildScrollView(
+                padding: const EdgeInsets.all(20),
+                child: Row(
+                  children: [
+                    CircleAvatar(
+                      radius: 25,
+                      backgroundImage: AssetImage(userData.gender == "ذكر"
+                          ? "assets/images/male.png"
+                          : "assets/images/female.png"),
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text("أهلا بيك \u{1F44B}"),
+                        Text(
+                          userData.name!,
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
             ),
