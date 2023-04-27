@@ -5,13 +5,22 @@ import 'package:clinicky/util/widgets/error_popup.dart';
 import 'package:custom_radio_grouped_button/custom_radio_grouped_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class CreateClinicPage extends StatefulWidget {
   const CreateClinicPage({super.key});
 
   @override
   State<CreateClinicPage> createState() => _CreateClinicPageState();
+}
+
+class Exception {
+  final String message;
+  Exception(this.message);
+
+  @override
+  String toString() {
+    return message;
+  }
 }
 
 class _CreateClinicPageState extends State<CreateClinicPage> {
@@ -26,6 +35,25 @@ class _CreateClinicPageState extends State<CreateClinicPage> {
   List<TimeOfDay?> availableTimeSlots = [];
   String? _specialization;
   var _infoIsValid = false;
+
+  Future<TimeOfDay?> addTimeSlot() async {
+    late final TimeOfDay? time;
+    try {
+      time =
+          await showTimePicker(context: context, initialTime: TimeOfDay.now());
+      if (availableTimeSlots.contains(time)) {
+        throw Exception("الموعد مضاف بالفعل");
+      }
+    } catch (err) {
+      showDialogMessage(
+        context: context,
+        color: ColorPallete.red,
+        text: err.toString(),
+      );
+      return null;
+    }
+    return time;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -287,23 +315,17 @@ class _CreateClinicPageState extends State<CreateClinicPage> {
     );
   }
 
-  Future<TimeOfDay?> addTimeSlot() async {
-    late final TimeOfDay? time;
-    try {
-      time =
-          await showTimePicker(context: context, initialTime: TimeOfDay.now());
-      if (availableTimeSlots.contains(time)) {
-        throw Exception("الموعد مضاف بالفعل");
-      }
-    } catch (err) {
-      showDialogMessage(
-        context: context,
-        color: ColorPallete.red,
-        text: err.toString(),
-      );
-      return null;
+  String? checkPhone(value) {
+    if (value == null || value.isEmpty) {
+      _infoIsValid = false;
+      return "الرجاء ادخل رقم العيادة";
+    } else if (!RegExp(
+            r"^([\+]|00)?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$")
+        .hasMatch(value)) {
+      _infoIsValid = false;
+      return "الرجاء ادخال رقم صالح";
     }
-    return time;
+    return null;
   }
 
   _validateInput() async {
@@ -349,28 +371,5 @@ class _CreateClinicPageState extends State<CreateClinicPage> {
     }
     if (!mounted) return;
     Navigator.pop(context);
-  }
-
-  String? checkPhone(value) {
-    if (value == null || value.isEmpty) {
-      _infoIsValid = false;
-      return "الرجاء ادخل رقم العيادة";
-    } else if (!RegExp(
-            r"^([\+]|00)?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$")
-        .hasMatch(value)) {
-      _infoIsValid = false;
-      return "الرجاء ادخال رقم صالح";
-    }
-    return null;
-  }
-}
-
-class Exception {
-  final String message;
-  Exception(this.message);
-
-  @override
-  String toString() {
-    return message;
   }
 }

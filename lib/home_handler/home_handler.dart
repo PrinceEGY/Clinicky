@@ -1,7 +1,7 @@
 import 'package:clinicky/home_handler/navbar/nav_bar.dart';
 import 'package:clinicky/models/user_data.dart';
 import 'package:clinicky/screens/appointments/appointments_screen.dart';
-import 'package:clinicky/screens/appointments/create_appointment/create_appointment_screen.dart';
+import 'package:clinicky/screens/appointments/create_appointment/find_speciality_screen.dart';
 import 'package:clinicky/screens/clinics/clinics_screen.dart';
 import 'package:clinicky/screens/clinics/craete_clinic/create_clinic_screen.dart';
 import 'package:clinicky/screens/home/home.dart';
@@ -67,7 +67,7 @@ class _HomeHandlerState extends State<HomeHandler> {
                     PageTransition(
                       child: userData.type == "doctor"
                           ? const CreateClinicPage()
-                          : const CreateAppointmentPage(),
+                          : const SpecialityPickPage(),
                       type: PageTransitionType.bottomToTop,
                     ),
                   );

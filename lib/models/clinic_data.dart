@@ -5,12 +5,12 @@ class ClinicData {
     "جلدية",
     "أسنان",
     "نفسية",
-    "اطفال وحديثي الولادة",
+    "اطفال",
     "مخ وأعصاب",
     "عظام",
     "نساء وتوليد",
     "انف واذن وحنجرة",
-    "قلب وأوعية دموية",
+    "قلب ",
     "باطنة",
     "جراحة",
     "عيون",
@@ -21,6 +21,7 @@ class ClinicData {
 
   String? sId;
   String? clinicName;
+  String? doctorName;
   String? phone;
   String? location;
   String? specialization;
@@ -30,21 +31,24 @@ class ClinicData {
   List<TimeOfDay?>? availableTimeSlots;
   int? rating = 0;
 
-  ClinicData(
-      {this.sId,
-      this.clinicName,
-      this.phone,
-      this.location,
-      this.specialization,
-      this.price,
-      this.about,
-      this.availableDays,
-      this.availableTimeSlots,
-      this.rating});
+  ClinicData({
+    this.sId,
+    this.clinicName,
+    this.doctorName,
+    this.phone,
+    this.location,
+    this.specialization,
+    this.price,
+    this.about,
+    this.availableDays,
+    this.availableTimeSlots,
+    this.rating,
+  });
 
   ClinicData.fromJson(Map<String, dynamic> json) {
     sId = json['id'];
     clinicName = json['clinicName'];
+    doctorName = json['doctor']['name'];
     phone = json['phone'];
     location = json['location'];
     specialization = json['specialization'];

@@ -182,6 +182,32 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
+  String? checkEmail(value) {
+    if (value == null || value.isEmpty) {
+      _infoIsValid = false;
+
+      return "الرجاء ادخال بريد الكتروني";
+    } else if (!RegExp(r"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$").hasMatch(value)) {
+      _infoIsValid = false;
+
+      return "الرجاء ادخال بريد الكتروني صالح";
+    }
+    return null;
+  }
+
+  String? checkPassword(String? value) {
+    if (value == null || value.isEmpty) {
+      _infoIsValid = false;
+
+      return "الرجاء ادخال كلمة سر";
+    } else if (value.length < 5) {
+      _infoIsValid = false;
+
+      return "الرجاء ادخال كلمة سر اكثر من 5 حروف";
+    }
+    return null;
+  }
+
   void _validateInput() async {
     final navigator = Navigator.of(context);
     showDialog(
@@ -210,31 +236,5 @@ class _LoginScreenState extends State<LoginScreen> {
           context: context, text: err.toString(), color: ColorPallete.red);
       Navigator.pop(context);
     }
-  }
-
-  String? checkEmail(value) {
-    if (value == null || value.isEmpty) {
-      _infoIsValid = false;
-
-      return "الرجاء ادخال بريد الكتروني";
-    } else if (!RegExp(r"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$").hasMatch(value)) {
-      _infoIsValid = false;
-
-      return "الرجاء ادخال بريد الكتروني صالح";
-    }
-    return null;
-  }
-
-  String? checkPassword(String? value) {
-    if (value == null || value.isEmpty) {
-      _infoIsValid = false;
-
-      return "الرجاء ادخال كلمة سر";
-    } else if (value.length < 5) {
-      _infoIsValid = false;
-
-      return "الرجاء ادخال كلمة سر اكثر من 5 حروف";
-    }
-    return null;
   }
 }

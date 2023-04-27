@@ -128,6 +128,29 @@ class BackendController {
         .toList();
   }
 
+  Future<List<ClinicData>?> getSpecializationClinics(
+      {required String specialization}) async {
+    var route = "/api/search/specialization?specialization=";
+    var response = await http.get(
+      Uri.parse(hostDomain + route + specialization),
+      headers: {
+        "Content-Type": "application/json",
+        "x-auth-token": _token!,
+        "Authorization": "Bearer $_token",
+      },
+    );
+    if (response.statusCode == 200) {
+      debugPrint("Clinics Data fetched successfully");
+      return jsonDecode(response.body)
+          .map<ClinicData>((value) => ClinicData.fromJson(value))
+          .toList();
+    } else if (response.statusCode == 204) {
+      return null;
+    } else {
+      throw Exception(jsonDecode(response.body)['message']);
+    }
+  }
+
   String? _getTokenFromResponse(Response response) {
     var headerList = response.headers['set-cookie']!.split(";");
     for (var kvPair in headerList) {
