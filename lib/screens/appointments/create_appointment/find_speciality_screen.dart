@@ -1,5 +1,5 @@
 import 'package:clinicky/models/clinic_data.dart';
-import 'package:clinicky/screens/appointments/widgets/speciality_view.dart';
+import 'package:clinicky/screens/appointments/widgets/speciality_card_view.dart';
 import 'package:clinicky/util/color_pallete.dart';
 import 'package:flutter/material.dart';
 

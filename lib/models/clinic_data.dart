@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 
 class ClinicData {
@@ -29,6 +31,7 @@ class ClinicData {
   String? about;
   List? availableDays;
   List<TimeOfDay?>? availableTimeSlots;
+  List? reservedDates;
   int? rating = 0;
 
   ClinicData({
@@ -48,7 +51,7 @@ class ClinicData {
   ClinicData.fromJson(Map<String, dynamic> json) {
     sId = json['id'];
     clinicName = json['clinicName'];
-    doctorName = json['doctor']['name'];
+    doctorName = json['doctor']?['name'];
     phone = json['phone'];
     location = json['location'];
     specialization = json['specialization'];
@@ -59,6 +62,7 @@ class ClinicData {
       var time = value.split(":");
       return TimeOfDay(hour: int.parse(time[0]), minute: int.parse(time[1]));
     }).toList();
+    reservedDates = json['reservedDates'];
     rating = json['rating'];
   }
 
@@ -74,10 +78,21 @@ class ClinicData {
       "days": availableDays,
       "time": availableTimeSlots!
           .map((value) =>
-              "${value!.hour}:${value.minute.toString().padLeft(2, "0")}")
+              "${value!.hour.toString().padLeft(2, "0")}:${value.minute.toString().padLeft(2, "0")}")
           .toList()
     };
-    data['rating'] = rating.toString();
     return data;
+  }
+
+  bool isSlotAvailable(DateTime day, TimeOfDay timeSlot) {
+    String currentDate =
+        "${day.year}-${day.month.toString().padLeft(2, "0")}-${day.day.toString().padLeft(2, "0")}";
+    for (var item in reservedDates!) {
+      if (item['day'] == currentDate) {
+        var itemIndex = availableTimeSlots!.indexOf(timeSlot);
+        return itemIndex == -1 ? false : !item['time'][itemIndex];
+      }
+    }
+    return false;
   }
 }

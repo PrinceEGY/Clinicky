@@ -1,6 +1,6 @@
 import 'package:clinicky/backend/backend_controller.dart';
 import 'package:clinicky/models/clinic_data.dart';
-import 'package:clinicky/screens/clinics/widgets/clinic_view.dart';
+import 'package:clinicky/screens/clinics/widgets/clinic_card_view.dart';
 import 'package:clinicky/util/color_pallete.dart';
 import 'package:clinicky/util/widgets/button.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +14,7 @@ class ClinicsPage extends StatefulWidget {
 }
 
 class _ClinicsPageState extends State<ClinicsPage> {
-  late Future<List<ClinicData>> futureClinicsData;
+  late Future<List<ClinicData>?> futureClinicsData;
 
   @override
   void initState() {
@@ -28,7 +28,7 @@ class _ClinicsPageState extends State<ClinicsPage> {
       future: futureClinicsData,
       builder: (context, AsyncSnapshot snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
-          List<ClinicData> clinicsData = snapshot.data;
+          List<ClinicData>? clinicsData = snapshot.data;
           return Scaffold(
             appBar: AppBar(
               automaticallyImplyLeading: false,
@@ -39,10 +39,29 @@ class _ClinicsPageState extends State<ClinicsPage> {
             body: SafeArea(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.all(20),
-                child: Column(
-                    children: clinicsData
+                child: Column(children: [
+                  if (snapshot.hasData)
+                    ...clinicsData!
                         .map((value) => ClinicView(clinicData: value))
-                        .toList()),
+                        .toList()
+                  else
+                    const Center(
+                      child: Card(
+                        color: Color.fromARGB(255, 254, 180, 190),
+                        child: Padding(
+                          padding: EdgeInsets.all(20),
+                          child: Text(
+                            "لا يوجد لديك عيادات متاحة، الرجاء قم باضافة عيادة واحدة على الأقل",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                ]),
               ),
             ),
           );

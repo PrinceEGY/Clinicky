@@ -1,6 +1,8 @@
 import 'package:clinicky/models/clinic_data.dart';
+import 'package:clinicky/screens/appointments/create_appointment/clinic_view.dart';
 import 'package:clinicky/util/color_pallete.dart';
 import 'package:flutter/material.dart';
+import 'package:page_transition/page_transition.dart';
 
 class ClinicViewPatient extends StatefulWidget {
   final ClinicData clinicData;
@@ -18,7 +20,17 @@ class _ClinicViewPatientState extends State<ClinicViewPatient> {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => {},
+      onTap: () => {
+        Navigator.push(
+          context,
+          PageTransition(
+            child: PatientClinicViewPage(
+              clinicID: widget.clinicData.sId!,
+            ),
+            type: PageTransitionType.leftToRight,
+          ),
+        )
+      },
       child: Stack(
         children: [
           Card(
@@ -52,7 +64,7 @@ class _ClinicViewPatientState extends State<ClinicViewPatient> {
                       ),
                       const SizedBox(height: 5),
                       Text(
-                        widget.clinicData.doctorName!,
+                        "د/ ${widget.clinicData.doctorName!}",
                         style: const TextStyle(
                           color: Colors.black,
                           fontSize: 14,

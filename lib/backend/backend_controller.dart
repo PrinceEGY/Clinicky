@@ -102,11 +102,12 @@ class BackendController {
     if (response.statusCode == 200) {
       debugPrint("Clinic added successfully");
     } else {
+      print(jsonEncode(clinicData.toJson()));
       throw Exception(jsonDecode(response.body)['message']);
     }
   }
 
-  Future<List<ClinicData>> getDoctorClinics() async {
+  Future<List<ClinicData>?> getDoctorClinics() async {
     var route = "/api/clinicks";
 
     var response = await http.get(
@@ -119,6 +120,8 @@ class BackendController {
     );
     if (response.statusCode == 200) {
       debugPrint("Clinics Data fetched successfully");
+    } else if (response.statusCode == 204) {
+      return null;
     } else {
       throw Exception(jsonDecode(response.body)['message']);
     }
@@ -146,6 +149,49 @@ class BackendController {
           .toList();
     } else if (response.statusCode == 204) {
       return null;
+    } else {
+      throw Exception(jsonDecode(response.body)['message']);
+    }
+  }
+
+  Future<ClinicData> getClinicDetails({required String clinicId}) async {
+    var route = "/api/clinicks/";
+    var response = await http.get(
+      Uri.parse(hostDomain + route + clinicId),
+      headers: {
+        "Content-Type": "application/json",
+        "x-auth-token": _token!,
+        "Authorization": "Bearer $_token",
+      },
+    );
+    if (response.statusCode == 200) {
+      debugPrint("Clinic Data fetched successfully");
+    } else {
+      throw Exception(jsonDecode(response.body)['message']);
+    }
+    return ClinicData.fromJson(jsonDecode(response.body));
+  }
+
+  Future<void> addNewAppointment(
+      {required String clinicId, required String date}) async {
+    var route = "/api/appointments";
+    var jsonObject = jsonEncode({
+      "clinick": clinicId,
+      "appointmentDate": date,
+      "bookingTime": DateTime.now().toString(),
+    });
+
+    var response = await http.post(
+      Uri.parse(hostDomain + route),
+      headers: {
+        "Content-Type": "application/json",
+        "x-auth-token": _token!,
+        "Authorization": "Bearer $_token",
+      },
+      body: jsonObject,
+    );
+    if (response.statusCode == 200) {
+      debugPrint("appointment added successfully");
     } else {
       throw Exception(jsonDecode(response.body)['message']);
     }

@@ -21,15 +21,15 @@ class _SpecialityVIewState extends State<SpecialityVIew> {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () => {
-        debugPrint("HI"),
         Navigator.push(
-            context,
-            PageTransition(
-              child: ClinicPickPage(
-                specialization: widget.specialization,
-              ),
-              type: PageTransitionType.leftToRight,
-            ))
+          context,
+          PageTransition(
+            child: ClinicPickPage(
+              specialization: widget.specialization,
+            ),
+            type: PageTransitionType.leftToRight,
+          ),
+        )
       },
       child: Column(
         children: [
