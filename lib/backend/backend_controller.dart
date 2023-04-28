@@ -1,6 +1,8 @@
 import 'dart:convert';
+import 'package:clinicky/models/appointment_data.dart';
 import 'package:clinicky/models/clinic_data.dart';
 import 'package:clinicky/models/user_data.dart';
+import 'package:clinicky/screens/appointments/appointments_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
@@ -195,6 +197,28 @@ class BackendController {
     } else {
       throw Exception(jsonDecode(response.body)['message']);
     }
+  }
+
+  Future<List<AppointmentData>?> getAllAppointmentsPatient() async {
+    var route = "/api/appointments/patient";
+    var response = await http.get(
+      Uri.parse(hostDomain + route),
+      headers: {
+        "Content-Type": "application/json",
+        "x-auth-token": _token!,
+        "Authorization": "Bearer $_token",
+      },
+    );
+    if (response.statusCode == 200) {
+      debugPrint("Appointments Data fetched successfully");
+    } else if (response.statusCode == 204) {
+      return null;
+    } else {
+      throw Exception(jsonDecode(response.body)['message']);
+    }
+    return jsonDecode(response.body)
+        .map<AppointmentData>((value) => AppointmentData.fromJson(value))
+        .toList();
   }
 
   String? _getTokenFromResponse(Response response) {

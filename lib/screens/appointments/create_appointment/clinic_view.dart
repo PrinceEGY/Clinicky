@@ -86,11 +86,6 @@ class _PatientClinicViewPageState extends State<PatientClinicViewPage> {
                       icon: const Icon(Icons.apartment),
                     ),
                     InfoContainer(
-                      title: "وصف العيادة",
-                      text: clinicData.about!,
-                      icon: const Icon(Icons.description),
-                    ),
-                    InfoContainer(
                       title: "المكان",
                       text: clinicData.location!,
                       icon: const Icon(Icons.location_on),
@@ -99,6 +94,16 @@ class _PatientClinicViewPageState extends State<PatientClinicViewPage> {
                       title: "سعر الكشف",
                       text: "\$${clinicData.price!} جنيه",
                       icon: const Icon(Icons.attach_money),
+                    ),
+                    InfoContainer(
+                      title: "رقم العيادة",
+                      text: clinicData.phone!,
+                      icon: const Icon(Icons.phone),
+                    ),
+                    InfoContainer(
+                      title: "وصف العيادة",
+                      text: clinicData.about!,
+                      icon: const Icon(Icons.description),
                     ),
                     const Padding(
                       padding: EdgeInsets.fromLTRB(0, 20, 20, 5),
