@@ -1,4 +1,4 @@
-import 'package:clinicky/screens/onboarding/splash_screen.dart';
+import 'package:clinicky/view/onboarding/splash_screen.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:clinicky/util/color_pallete.dart';
 import 'package:flutter/material.dart';
