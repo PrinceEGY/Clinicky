@@ -1,6 +1,7 @@
 import 'package:clinicky/backend/backend_controller.dart';
 import 'package:clinicky/models/clinic_data.dart';
 import 'package:clinicky/screens/appointments/widgets/clinic_card_view.dart';
+import 'package:clinicky/screens/appointments/widgets/speciality_card_view.dart';
 import 'package:clinicky/util/color_pallete.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';

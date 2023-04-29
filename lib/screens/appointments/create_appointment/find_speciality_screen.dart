@@ -35,6 +35,7 @@ class SpecialityPickPage extends StatelessWidget {
                     alignment: WrapAlignment.spaceAround,
                     children: ClinicData.specialities
                         .map((value) => SpecialityVIew(
+                            size: 130,
                             specialization: value,
                             iconPath:
                                 "assets/images/speciality_icons/tooth.png"))

@@ -6,10 +6,12 @@ import 'package:page_transition/page_transition.dart';
 class SpecialityVIew extends StatefulWidget {
   final String specialization;
   final String iconPath;
+  final double size;
   const SpecialityVIew({
     super.key,
     required this.specialization,
     required this.iconPath,
+    required this.size,
   });
 
   @override
@@ -34,8 +36,8 @@ class _SpecialityVIewState extends State<SpecialityVIew> {
       child: Column(
         children: [
           Container(
-            width: 130,
-            height: 130,
+            width: widget.size,
+            height: widget.size,
             padding: const EdgeInsets.all(25),
             decoration: const BoxDecoration(
               color: ColorPallete.secondaryColor,
@@ -43,8 +45,6 @@ class _SpecialityVIewState extends State<SpecialityVIew> {
             ),
             child: Image.asset(
               widget.iconPath,
-              width: 80,
-              height: 80,
             ),
           ),
           const SizedBox(height: 10),

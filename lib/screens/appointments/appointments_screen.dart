@@ -31,8 +31,10 @@ class _AppointmentPageState extends State<AppointmentPage> {
           return Scaffold(
             appBar: AppBar(
               automaticallyImplyLeading: false,
-              title: const Text("حجوزاتي",
-                  style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
+              title: const Text(
+                "حجوزاتي",
+                style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+              ),
               foregroundColor: ColorPallete.mainColor,
             ),
             body: SafeArea(
@@ -40,7 +42,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
                 padding: const EdgeInsets.all(20),
                 child: Column(children: [
                   if (snapshot.hasData)
-                    ...appointmentsData!
+                    ...appointmentsData!.reversed
                         .map((value) => AppointmentCard(appointmentData: value))
                         .toList()
                   else
@@ -53,8 +55,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
                             "لا يوجد لديك حجوزات بعد\n قم بحجز موعد جديد من الزر بمنتصف الشاشة",
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
                             ),
                           ),
                         ),

@@ -42,7 +42,7 @@ class _AppointmentCardState extends State<AppointmentCard> {
                     onPressed: () => null,
                     color: _getStatusColor(widget.appointmentData.status!),
                   ),
-                  const SizedBox(height: 15),
+                  const SizedBox(height: 10),
                   Text(
                     widget.appointmentData.appointmentDate!.split(" ")[0],
                     style: const TextStyle(
@@ -78,21 +78,21 @@ class _AppointmentCardState extends State<AppointmentCard> {
                           style: const TextStyle(
                             color: ColorPallete.mainColor,
                             fontWeight: FontWeight.bold,
-                            fontSize: 20,
+                            fontSize: 18,
                           ),
                         ),
                         const SizedBox(height: 5),
                         Text(
                           "د/ ${widget.appointmentData.doctorName!}",
                           style: const TextStyle(
-                            fontSize: 16,
+                            fontSize: 14,
                           ),
                         ),
                         const SizedBox(height: 5),
                         Text(
                           widget.appointmentData.specialization!,
                           style: const TextStyle(
-                            fontSize: 16,
+                            fontSize: 14,
                           ),
                         ),
                         const SizedBox(height: 15),
@@ -100,7 +100,7 @@ class _AppointmentCardState extends State<AppointmentCard> {
                           widget.appointmentData.location!,
                           style: const TextStyle(
                             color: ColorPallete.grey,
-                            fontSize: 16,
+                            fontSize: 14,
                           ),
                         ),
                       ],

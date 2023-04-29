@@ -128,7 +128,7 @@ class _PatientClinicViewPageState extends State<PatientClinicViewPage> {
                       child: Wrap(
                         spacing: 10,
                         alignment: WrapAlignment.spaceEvenly,
-                        children: clinicData.availableTimeSlots!
+                        children: clinicData.availableTimeSlots!.reversed
                             .map((value) => TimeSlot(
                                   isSelected: value == selectedTimeSlot,
                                   time: value!,
@@ -160,18 +160,18 @@ class _PatientClinicViewPageState extends State<PatientClinicViewPage> {
                         text: "الرجاء اختيار موعد",
                         color: ColorPallete.red,
                       );
+                    } else {
+                      Navigator.push(
+                          context,
+                          PageTransition(
+                            child: ConfirmationPage(
+                              clinicData: clinicData,
+                              selectedDay: selectedDay!,
+                              selectedTimeSlot: selectedTimeSlot!,
+                            ),
+                            type: PageTransitionType.leftToRight,
+                          ));
                     }
-                    Navigator.push(
-                        context,
-                        PageTransition(
-                          child: ConfirmationPage(
-                            clinicData: clinicData,
-                            selectedDay: selectedDay!,
-                            selectedTimeSlot: selectedTimeSlot!,
-                          ),
-                          type: PageTransitionType.leftToRight,
-                        ));
-                    // _validateInput();
                   },
                   child: const Text(
                     "حجز الموعد",
