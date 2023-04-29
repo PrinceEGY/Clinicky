@@ -240,15 +240,52 @@ class BackendController {
     return AppointmentData.fromJson(jsonDecode(response.body));
   }
 
-  Future<void> deleteAppointmentById({required String appointmentId}) async {
-    var route = "/api/appointments/";
-    var response = await http.delete(
-      Uri.parse(hostDomain + route + appointmentId),
+  Future<void> updateAppointmentStatusByIdPatient({
+    required AppointmentData appointmentData,
+    required String newStatus,
+  }) async {
+    var route = "/api/appointments/patient/";
+    var jsonBody = jsonEncode({
+      "clinick": appointmentData.clinicId,
+      "appointmentDate": appointmentData.appointmentDate,
+      "bookingTime": appointmentData.bookingTime,
+      "status": newStatus,
+    });
+    var response = await http.put(
+      Uri.parse(hostDomain + route + appointmentData.sId!),
       headers: {
         "Content-Type": "application/json",
         "x-auth-token": _token!,
         "Authorization": "Bearer $_token",
       },
+      body: jsonBody,
+    );
+    if (response.statusCode == 200) {
+      debugPrint("Appointment deleted successfuly");
+    } else {
+      throw Exception(jsonDecode(response.body)['message']);
+    }
+  }
+
+  Future<void> updateAppointmentStatusByIdClinic({
+    required AppointmentData appointmentData,
+    required String newStatus,
+  }) async {
+    var route = "/api/appointments/clinick/";
+    var jsonBody = jsonEncode({
+      "clinick": appointmentData.clinicId,
+      "appointmentDate": appointmentData.appointmentDate,
+      "bookingTime": appointmentData.bookingTime,
+      "status": newStatus,
+    });
+    var response = await http.put(
+      Uri.parse(hostDomain + route + appointmentData.sId!),
+      headers: {
+        "Content-Type": "application/json",
+        "x-auth-token": _token!,
+        "Authorization": "Bearer $_token",
+      },
+      body: jsonBody,
     );
     if (response.statusCode == 200) {
       debugPrint("Appointment deleted successfuly");

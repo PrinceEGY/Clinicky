@@ -18,6 +18,7 @@ class HomePagePatient extends StatefulWidget {
 class _HomePagePatientState extends State<HomePagePatient> {
   final request = BackendController.instance;
   late Future<UserData> futureUserData;
+  late List<AppointmentData>? appointmentsData;
   late Future<List<AppointmentData>?> futureAppointmentsData;
   final TextEditingController _searchController = TextEditingController();
 
@@ -38,7 +39,7 @@ class _HomePagePatientState extends State<HomePagePatient> {
       builder: (context, AsyncSnapshot snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           UserData userData = snapshot.data[0];
-          List<AppointmentData>? appointmentsData = snapshot.data[1];
+          appointmentsData = snapshot.data[1];
           return SafeArea(
             child: Scaffold(
               body: SingleChildScrollView(
@@ -93,8 +94,10 @@ class _HomePagePatientState extends State<HomePagePatient> {
                       ),
                     ),
                     const SizedBox(height: 10),
-                    if (snapshot.data[1] != null)
-                      AppointmentCard(appointmentData: appointmentsData!.last)
+                    if (snapshot.data[1] != null &&
+                        _getUpcomingAppoointment() != null)
+                      AppointmentCard(
+                          appointmentData: _getUpcomingAppoointment()!)
                     else
                       const Center(
                         child: Card(
@@ -102,7 +105,7 @@ class _HomePagePatientState extends State<HomePagePatient> {
                           child: Padding(
                             padding: EdgeInsets.all(20),
                             child: Text(
-                              "لا يوجد لديك حجوزات بعد\n قم بحجز موعد جديد من الزر بمنتصف الشاشة",
+                              "لا يوجد لديك حجوزات قادمة\n قم بحجز موعد جديد من الزر بمنتصف الشاشة",
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 fontSize: 18,
@@ -151,5 +154,12 @@ class _HomePagePatientState extends State<HomePagePatient> {
         }
       },
     );
+  }
+
+  AppointmentData? _getUpcomingAppoointment() {
+    for (var appointment in appointmentsData!.reversed) {
+      if (appointment.status == AppointmentStatus.pending) return appointment;
+    }
+    return null;
   }
 }

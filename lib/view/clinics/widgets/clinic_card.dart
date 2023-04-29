@@ -1,7 +1,7 @@
 import 'package:clinicky/models/clinic_data.dart';
 import 'package:clinicky/util/color_pallete.dart';
 import 'package:clinicky/util/widgets/button.dart';
-import 'package:clinicky/view/clinics/clinic_appointments_view/appointments_view.dart';
+import 'package:clinicky/view/clinics/clinic_appointments_view/clinic_appointments_view.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 

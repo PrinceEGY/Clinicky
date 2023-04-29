@@ -1,9 +1,11 @@
+import 'package:clinicky/controllers/backend/backend_controller.dart';
 import 'package:clinicky/models/appointment_data.dart';
-import 'package:clinicky/view/appointments/appointment_view/appointment_view.dart';
+import 'package:clinicky/util/widgets/error_popup.dart';
 import 'package:clinicky/view/appointments/create_appointment/clinic_view.dart';
 import 'package:clinicky/util/color_pallete.dart';
 import 'package:clinicky/util/widgets/button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:page_transition/page_transition.dart';
 
 class AppointmentClinicCard extends StatefulWidget {
@@ -87,7 +89,7 @@ class _AppointmentClinicCardState extends State<AppointmentClinicCard> {
                             ),
                           ),
                           child: Text(
-                            widget.appointmentData.clinicName!,
+                            widget.appointmentData.patientName!,
                             style: const TextStyle(
                               color: ColorPallete.mainColor,
                               fontWeight: FontWeight.bold,
@@ -121,54 +123,128 @@ class _AppointmentClinicCardState extends State<AppointmentClinicCard> {
                     ),
                   ],
                 ),
-                const Divider(
-                  color: ColorPallete.mainColor,
-                  height: 25,
-                  thickness: 1,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    RoundedButton(
-                      text: const Text("عرض الحجز"),
-                      onPressed: () => Navigator.push(
-                        context,
-                        PageTransition(
-                          child: AppointmentView(
-                            appointmentData: widget.appointmentData.sId!,
-                          ),
-                          type: PageTransitionType.leftToRight,
-                        ),
+                if (widget.appointmentData.status ==
+                    AppointmentStatus.pending) ...[
+                  const Divider(
+                    color: ColorPallete.mainColor,
+                    height: 25,
+                    thickness: 1,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      RoundedButton(
+                        text: const Text("إتمام الحجز"),
+                        onPressed: () {
+                          updateAppointmentDialog(
+                              text: "هل تم الموعد بنجاح وتريد اغلاقه؟",
+                              status: "COMPLETED");
+                        },
+                        width: screenWidth * 0.38,
                       ),
-                      width: screenWidth * 0.38,
-                    ),
-                    RoundedButton(
-                      isBordered: true,
-                      text: const Text("اعادة الجدولة"),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          PageTransition(
-                            child: PatientClinicViewPage(
-                              clinicID: widget.appointmentData.clinicId!,
-                              isNewAppointment: false,
-                              oldAppointmentId: widget.appointmentData.sId!,
-                            ),
-                            type: PageTransitionType.leftToRight,
-                          ),
-                        );
-                      },
-                      width: screenWidth * 0.38,
-                      color: ColorPallete.red,
-                    ),
-                  ],
-                ),
+                      RoundedButton(
+                        isBordered: true,
+                        text: const Text("الغاء الحجز"),
+                        onPressed: () {
+                          updateAppointmentDialog(
+                              text: "هل انت متاكد انك تريد الغاء الحجز؟",
+                              status: "CANCELED");
+                        },
+                        width: screenWidth * 0.38,
+                        color: ColorPallete.red,
+                      ),
+                    ],
+                  )
+                ],
               ],
             ),
           ],
         ),
       ),
     );
+  }
+
+  void updateAppointmentDialog({required String text, required String status}) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          content: IntrinsicHeight(
+            child: Container(
+              padding: const EdgeInsets.all(8),
+              child: Column(
+                children: [
+                  Text(
+                    text,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontSize: 18,
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      RoundedButton(
+                        text: const Text(
+                          "تأكيد",
+                        ),
+                        onPressed: () {
+                          updateAppointmentStatus(status: status);
+                        },
+                        color: ColorPallete.red,
+                      ),
+                      const SizedBox(width: 10),
+                      RoundedButton(
+                        text: const Text(
+                          "الغاء",
+                        ),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        color: ColorPallete.mainColor,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void updateAppointmentStatus({required status}) async {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (context) => const SpinKitCubeGrid(
+        color: ColorPallete.mainColor,
+        size: 100,
+      ),
+    );
+    try {
+      await BackendController.instance.updateAppointmentStatusByIdClinic(
+        appointmentData: widget.appointmentData,
+        newStatus: status,
+      );
+      if (!mounted) return;
+      Navigator.pop(context);
+      Navigator.pop(context);
+      showDialogMessage(
+          context: context,
+          text: "تمت العملية بنجاح",
+          color: ColorPallete.green);
+      setState(() {});
+    } catch (err) {
+      Navigator.pop(context);
+      showDialogMessage(
+        context: context,
+        text: err.toString(),
+        color: ColorPallete.red,
+      );
+    }
   }
 
   String _getStatusText(AppointmentStatus appointmentStatus) {

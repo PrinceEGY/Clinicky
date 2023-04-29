@@ -3,7 +3,6 @@ import 'package:clinicky/controllers/home/home_controller.dart';
 import 'package:clinicky/models/appointment_data.dart';
 import 'package:clinicky/util/widgets/button.dart';
 import 'package:clinicky/util/widgets/error_popup.dart';
-import 'package:clinicky/view/appointments/appointments_screen.dart';
 import 'package:clinicky/view/appointments/create_appointment/clinic_view.dart';
 import 'package:clinicky/view/appointments/widgets/info_container.dart';
 import 'package:clinicky/util/color_pallete.dart';
@@ -12,10 +11,10 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:page_transition/page_transition.dart';
 
 class AppointmentView extends StatefulWidget {
-  final String appointmentData;
+  final String appointmentId;
   const AppointmentView({
     super.key,
-    required this.appointmentData,
+    required this.appointmentId,
   });
 
   @override
@@ -29,7 +28,7 @@ class _AppointmentViewState extends State<AppointmentView> {
   void initState() {
     super.initState();
     futureAppointmentData = BackendController.instance
-        .getAppointmentById(appointmentId: widget.appointmentData);
+        .getAppointmentById(appointmentId: widget.appointmentId);
   }
 
   @override
@@ -120,56 +119,7 @@ class _AppointmentViewState extends State<AppointmentView> {
                             isBordered: true,
                             text: const Text("الغاء الحجز"),
                             onPressed: () {
-                              showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    return AlertDialog(
-                                      content: IntrinsicHeight(
-                                        child: Container(
-                                          padding: const EdgeInsets.all(8),
-                                          child: Column(
-                                            children: [
-                                              const Text(
-                                                "هل انت متأكد انك تريد الغاء الحجز؟",
-                                                textAlign: TextAlign.center,
-                                                style: TextStyle(
-                                                  // fontWeight: FontWeight.bold,
-                                                  fontSize: 18,
-                                                ),
-                                              ),
-                                              const SizedBox(height: 20),
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: [
-                                                  RoundedButton(
-                                                    text: const Text(
-                                                      "تأكيد الالغاء",
-                                                    ),
-                                                    onPressed: () {
-                                                      deleteAppointment();
-                                                    },
-                                                    color: ColorPallete.red,
-                                                  ),
-                                                  const SizedBox(width: 10),
-                                                  RoundedButton(
-                                                    text: const Text(
-                                                      "عدم الإلغاء",
-                                                    ),
-                                                    onPressed: () {
-                                                      Navigator.pop(context);
-                                                    },
-                                                    color:
-                                                        ColorPallete.mainColor,
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    );
-                                  });
+                              deleteAppointmentDialog();
                             },
                             width: MediaQuery.of(context).size.width * 0.38,
                             color: ColorPallete.red,
@@ -193,6 +143,58 @@ class _AppointmentViewState extends State<AppointmentView> {
     );
   }
 
+  void deleteAppointmentDialog() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          content: IntrinsicHeight(
+            child: Container(
+              padding: const EdgeInsets.all(8),
+              child: Column(
+                children: [
+                  const Text(
+                    "هل انت متأكد انك تريد الغاء الحجز؟",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      // fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      RoundedButton(
+                        text: const Text(
+                          "تأكيد الالغاء",
+                        ),
+                        onPressed: () {
+                          deleteAppointment();
+                        },
+                        color: ColorPallete.red,
+                      ),
+                      const SizedBox(width: 10),
+                      RoundedButton(
+                        text: const Text(
+                          "عدم الإلغاء",
+                        ),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        color: ColorPallete.mainColor,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   void deleteAppointment() async {
     showDialog(
       barrierDismissible: false,
@@ -203,8 +205,9 @@ class _AppointmentViewState extends State<AppointmentView> {
       ),
     );
     try {
-      await BackendController.instance.deleteAppointmentById(
-        appointmentId: appointmentData.sId!,
+      await BackendController.instance.updateAppointmentStatusByIdPatient(
+        appointmentData: appointmentData,
+        newStatus: "CANCELED",
       );
       if (!mounted) return;
       Navigator.pop(context);

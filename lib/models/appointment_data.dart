@@ -2,6 +2,7 @@ class AppointmentData {
   String? sId;
   String? appointmentDate;
   String? bookingTime;
+  String? patientName;
   AppointmentStatus? status;
   String? price;
   String? doctorName;
@@ -17,6 +18,7 @@ class AppointmentData {
     this.bookingTime,
     this.status,
     this.price,
+    this.patientName,
     this.doctorName,
     this.doctorId,
     this.clinicName,
@@ -30,6 +32,7 @@ class AppointmentData {
     appointmentDate = json['appointmentDate'];
     bookingTime = json['bookingTime'];
     status = _getStatus(json['status']);
+    patientName = json['patient']?['name'];
     price = json['clinick']?['price'];
     doctorName = json['clinick']['doctor']['name'];
     doctorId = json['clinick']['doctor']['id'];

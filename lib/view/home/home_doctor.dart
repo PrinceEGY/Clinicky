@@ -2,8 +2,8 @@ import 'package:clinicky/controllers/backend/backend_controller.dart';
 import 'package:clinicky/models/appointment_data.dart';
 import 'package:clinicky/models/clinic_data.dart';
 import 'package:clinicky/models/user_data.dart';
-import 'package:clinicky/view/appointments/widgets/appointment_card.dart';
 import 'package:clinicky/util/color_pallete.dart';
+import 'package:clinicky/view/clinics/widgets/appointment_card.dart';
 import 'package:clinicky/view/clinics/widgets/clinic_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -20,12 +20,14 @@ class _HomePageDoctorState extends State<HomePageDoctor> {
   late Future<UserData> futureUserData;
   late Future<List<ClinicData>?> futureClinicsData;
   final TextEditingController _searchController = TextEditingController();
+  late UserData userData;
+  late List<ClinicData>? clinicsData;
 
   @override
   void initState() {
     super.initState();
     futureUserData = request.getUserInfo();
-    futureClinicsData = BackendController.instance.getDoctorClinics();
+    futureClinicsData = request.getDoctorClinics();
   }
 
   @override
@@ -36,8 +38,8 @@ class _HomePageDoctorState extends State<HomePageDoctor> {
       future: Future.wait([futureUserData, futureClinicsData]),
       builder: (context, AsyncSnapshot snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
-          UserData userData = snapshot.data[0];
-          List<ClinicData>? clinicsData = snapshot.data[1];
+          userData = snapshot.data[0];
+          clinicsData = snapshot.data[1];
           return SafeArea(
             child: Scaffold(
               body: SingleChildScrollView(
@@ -101,7 +103,7 @@ class _HomePageDoctorState extends State<HomePageDoctor> {
                           child: Padding(
                             padding: EdgeInsets.all(20),
                             child: Text(
-                              "لا يوجد لديك حجوزات بعد\n قم بحجز موعد جديد من الزر بمنتصف الشاشة",
+                              "لا يوجد لديك عيادات بعد، قم باضافة عيادة جديدة",
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 fontSize: 18,
@@ -110,13 +112,66 @@ class _HomePageDoctorState extends State<HomePageDoctor> {
                           ),
                         ),
                       ),
+                    const SizedBox(height: 10),
                     const Text(
-                      "حجوزاتي",
+                      "الحجوزات القادمة",
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 18,
                       ),
                     ),
+                    const SizedBox(height: 10),
+                    clinicsData != null
+                        ? FutureBuilder(
+                            future: request.getAllAppointmentsByClinicId(
+                                clinicId: clinicsData!.first.sId!),
+                            builder: (context, AsyncSnapshot snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.done) {
+                                if (snapshot.hasData) {
+                                  return AppointmentClinicCard(
+                                      appointmentData: _getUpcomingAppoointment(
+                                          snapshot.data)!);
+                                } else {
+                                  return const Center(
+                                    child: Card(
+                                      color: Color.fromARGB(255, 254, 180, 190),
+                                      child: Padding(
+                                        padding: EdgeInsets.all(20),
+                                        child: Text(
+                                          "لا يوجد لديك حجوزات قادمة\n قم بحجز موعد جديد من الزر بمنتصف الشاشة",
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            fontSize: 18,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                }
+                              } else {
+                                return const Padding(
+                                  padding: EdgeInsets.all(20.0),
+                                  child: CircularProgressIndicator(),
+                                );
+                              }
+                            },
+                          )
+                        : const Center(
+                            child: Card(
+                              color: Color.fromARGB(255, 254, 180, 190),
+                              child: Padding(
+                                padding: EdgeInsets.all(20),
+                                child: Text(
+                                  "لا يوجد لديك عيادات قادمة",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
                   ],
                 ),
               ),
@@ -131,5 +186,13 @@ class _HomePageDoctorState extends State<HomePageDoctor> {
         }
       },
     );
+  }
+
+  AppointmentData? _getUpcomingAppoointment(
+      List<AppointmentData> appointmentsData) {
+    for (var appointment in appointmentsData.reversed) {
+      if (appointment.status == AppointmentStatus.pending) return appointment;
+    }
+    return null;
   }
 }

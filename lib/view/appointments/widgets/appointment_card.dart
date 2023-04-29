@@ -121,48 +121,51 @@ class _AppointmentCardState extends State<AppointmentCard> {
                     ),
                   ],
                 ),
-                const Divider(
-                  color: ColorPallete.mainColor,
-                  height: 25,
-                  thickness: 1,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    RoundedButton(
-                      text: const Text("عرض الحجز"),
-                      onPressed: () => Navigator.push(
-                        context,
-                        PageTransition(
-                          child: AppointmentView(
-                            appointmentData: widget.appointmentData.sId!,
-                          ),
-                          type: PageTransitionType.leftToRight,
-                        ),
-                      ),
-                      width: screenWidth * 0.38,
-                    ),
-                    RoundedButton(
-                      isBordered: true,
-                      text: const Text("اعادة الجدولة"),
-                      onPressed: () {
-                        Navigator.push(
+                if (widget.appointmentData.status ==
+                    AppointmentStatus.pending) ...[
+                  const Divider(
+                    color: ColorPallete.mainColor,
+                    height: 25,
+                    thickness: 1,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      RoundedButton(
+                        text: const Text("عرض الحجز"),
+                        onPressed: () => Navigator.push(
                           context,
                           PageTransition(
-                            child: PatientClinicViewPage(
-                              clinicID: widget.appointmentData.clinicId!,
-                              isNewAppointment: false,
-                              oldAppointmentId: widget.appointmentData.sId!,
+                            child: AppointmentView(
+                              appointmentId: widget.appointmentData.sId!,
                             ),
                             type: PageTransitionType.leftToRight,
                           ),
-                        );
-                      },
-                      width: screenWidth * 0.38,
-                      color: ColorPallete.red,
-                    ),
-                  ],
-                ),
+                        ),
+                        width: screenWidth * 0.38,
+                      ),
+                      RoundedButton(
+                        isBordered: true,
+                        text: const Text("اعادة الجدولة"),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            PageTransition(
+                              child: PatientClinicViewPage(
+                                clinicID: widget.appointmentData.clinicId!,
+                                isNewAppointment: false,
+                                oldAppointmentId: widget.appointmentData.sId!,
+                              ),
+                              type: PageTransitionType.leftToRight,
+                            ),
+                          );
+                        },
+                        width: screenWidth * 0.38,
+                        color: ColorPallete.red,
+                      ),
+                    ],
+                  )
+                ],
               ],
             ),
           ],

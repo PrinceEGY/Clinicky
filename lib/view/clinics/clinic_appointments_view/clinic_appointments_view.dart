@@ -1,7 +1,7 @@
 import 'package:clinicky/controllers/backend/backend_controller.dart';
 import 'package:clinicky/models/appointment_data.dart';
-import 'package:clinicky/models/clinic_data.dart';
 import 'package:clinicky/util/color_pallete.dart';
+import 'package:clinicky/view/clinics/widgets/appointment_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
@@ -19,6 +19,8 @@ class ClinicAppointmentViewPage extends StatefulWidget {
 
 class _ClinicAppointmentViewPageState extends State<ClinicAppointmentViewPage> {
   late Future<List<AppointmentData>?> futureClinicData;
+  final TextEditingController _searchController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
@@ -36,16 +38,34 @@ class _ClinicAppointmentViewPageState extends State<ClinicAppointmentViewPage> {
             List<AppointmentData>? appointmentsData = snapshot.data;
             return Scaffold(
               appBar: AppBar(
-                title: const Text("الحجوزات",
-                    style:
-                        TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
+                title: Text(appointmentsData!.first.clinicName!,
+                    style: const TextStyle(
+                        fontSize: 25, fontWeight: FontWeight.bold)),
                 foregroundColor: ColorPallete.mainColor,
               ),
               body: SingleChildScrollView(
+                padding: const EdgeInsets.all(20),
                 physics: const BouncingScrollPhysics(),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [],
+                  children: [
+                    // const SizedBox(height: 20),
+                    TextField(
+                      keyboardType: TextInputType.name,
+                      textInputAction: TextInputAction.go,
+                      controller: _searchController,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        labelText: "إبحث من هنا",
+                        prefixIcon: const Icon(Icons.search),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    ...appointmentsData.map((value) =>
+                        AppointmentClinicCard(appointmentData: value))
+                  ],
                 ),
               ),
             );
