@@ -38,7 +38,10 @@ class _ClinicAppointmentViewPageState extends State<ClinicAppointmentViewPage> {
             List<AppointmentData>? appointmentsData = snapshot.data;
             return Scaffold(
               appBar: AppBar(
-                title: Text(appointmentsData!.first.clinicName!,
+                title: Text(
+                    appointmentsData != null
+                        ? appointmentsData.first.clinicName!
+                        : "عرض العيادة",
                     style: const TextStyle(
                         fontSize: 25, fontWeight: FontWeight.bold)),
                 foregroundColor: ColorPallete.mainColor,
@@ -49,7 +52,6 @@ class _ClinicAppointmentViewPageState extends State<ClinicAppointmentViewPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // const SizedBox(height: 20),
                     TextField(
                       keyboardType: TextInputType.name,
                       textInputAction: TextInputAction.go,
@@ -63,8 +65,25 @@ class _ClinicAppointmentViewPageState extends State<ClinicAppointmentViewPage> {
                       ),
                     ),
                     const SizedBox(height: 20),
-                    ...appointmentsData.map((value) =>
-                        AppointmentClinicCard(appointmentData: value))
+                    if (appointmentsData != null)
+                      ...appointmentsData.map((value) =>
+                          AppointmentClinicCard(appointmentData: value))
+                    else
+                      const Center(
+                        child: Card(
+                          color: Color.fromARGB(255, 254, 180, 190),
+                          child: Padding(
+                            padding: EdgeInsets.all(20),
+                            child: Text(
+                              "لا يوجد لديك حجوزات قادمة\n قم بحجز موعد جديد من الزر بمنتصف الشاشة",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 18,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
                   ],
                 ),
               ),

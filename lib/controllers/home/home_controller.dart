@@ -41,7 +41,7 @@ class _HomeControllerState extends State<HomeController> {
     futureUserData = setUserInfo();
   }
 
-  final pages = [
+  final List<StatefulWidget> pages = [
     const HomePagePatient(),
     const AppointmentPage(),
     const NotificationsPage(),

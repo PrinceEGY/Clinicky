@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:clinicky/models/appointment_data.dart';
 import 'package:clinicky/models/clinic_data.dart';
+import 'package:clinicky/models/notification_data.dart';
 import 'package:clinicky/models/user_data.dart';
 import 'package:clinicky/view/appointments/appointments_screen.dart';
 import 'package:flutter/material.dart';
@@ -340,6 +341,29 @@ class BackendController {
     }
     return jsonDecode(response.body)
         .map<AppointmentData>((value) => AppointmentData.fromJson(value))
+        .toList();
+  }
+
+  Future<List<NotificationData>?> getAllNotificationsByPatient() async {
+    var route = "/api/notification/patient";
+    var response = await http.get(
+      Uri.parse(hostDomain + route),
+      headers: {
+        "Content-Type": "application/json",
+        "x-auth-token": _token!,
+        "Authorization": "Bearer $_token",
+      },
+    );
+    if (response.statusCode == 200) {
+      debugPrint("Appointments Data fetched successfully");
+    } else if (response.statusCode == 204) {
+      return null;
+    } else {
+      throw Exception(jsonDecode(response.body)['message']);
+    }
+
+    return jsonDecode(response.body)
+        .map<NotificationData>((value) => NotificationData.fromJson(value))
         .toList();
   }
 
