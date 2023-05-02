@@ -30,18 +30,23 @@ class _NotificationsPageState extends State<NotificationsPage> {
         if (snapshot.connectionState == ConnectionState.done) {
           if (snapshot.hasData) {
             List<NotificationData> notificationsData = snapshot.data;
-            return Scaffold(
-              appBar: AppBar(
-                automaticallyImplyLeading: false,
-                title: const Text("إشعاراتي",
-                    style:
-                        TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
-                foregroundColor: ColorPallete.mainColor,
-              ),
-              body: Column(
-                children: notificationsData.reversed
-                    .map((value) => NotificationCard(notificationData: value))
-                    .toList(),
+            return SafeArea(
+              child: Scaffold(
+                appBar: AppBar(
+                  automaticallyImplyLeading: false,
+                  title: const Text("إشعاراتي",
+                      style:
+                          TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
+                  foregroundColor: ColorPallete.mainColor,
+                ),
+                body: SingleChildScrollView(
+                  child: Column(
+                    children: notificationsData.reversed
+                        .map((value) =>
+                            NotificationCard(notificationData: value))
+                        .toList(),
+                  ),
+                ),
               ),
             );
           } else {

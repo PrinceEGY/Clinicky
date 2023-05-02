@@ -139,7 +139,7 @@ class _HomePageDoctorState extends State<HomePageDoctor> {
                                       child: Padding(
                                         padding: EdgeInsets.all(20),
                                         child: Text(
-                                          "لا يوجد لديك حجوزات قادمة\n قم بحجز موعد جديد من الزر بمنتصف الشاشة",
+                                          "لا يوجد لديك حجوزات قادمة",
                                           textAlign: TextAlign.center,
                                           style: TextStyle(
                                             fontSize: 18,
@@ -163,7 +163,7 @@ class _HomePageDoctorState extends State<HomePageDoctor> {
                               child: Padding(
                                 padding: EdgeInsets.all(20),
                                 child: Text(
-                                  "لا يوجد لديك عيادات قادمة",
+                                  "لا يوجد لديك حجوزات قادمة",
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                     fontSize: 18,

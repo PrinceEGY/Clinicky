@@ -6,6 +6,7 @@ import 'package:clinicky/util/color_pallete.dart';
 import 'package:clinicky/util/widgets/button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:page_transition/page_transition.dart';
 
 class AppointmentClinicCard extends StatefulWidget {
@@ -75,20 +76,13 @@ class _AppointmentClinicCardState extends State<AppointmentClinicCard> {
                       backgroundImage: AssetImage("assets/images/male.png"),
                     ),
                     const SizedBox(width: 10),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        InkWell(
-                          onTap: () => Navigator.push(
-                            context,
-                            PageTransition(
-                              child: PatientClinicViewPage(
-                                clinicID: widget.appointmentData.clinicId!,
-                              ),
-                              type: PageTransitionType.leftToRight,
-                            ),
-                          ),
-                          child: Text(
+                    ConstrainedBox(
+                      constraints: BoxConstraints(
+                          maxWidth: MediaQuery.of(context).size.width * .35),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
                             widget.appointmentData.patientName!,
                             style: const TextStyle(
                               color: ColorPallete.mainColor,
@@ -96,30 +90,30 @@ class _AppointmentClinicCardState extends State<AppointmentClinicCard> {
                               fontSize: 18,
                             ),
                           ),
-                        ),
-                        const SizedBox(height: 5),
-                        Text(
-                          "د/ ${widget.appointmentData.doctorName!}",
-                          style: const TextStyle(
-                            fontSize: 14,
+                          const SizedBox(height: 5),
+                          Text(
+                            "د/ ${widget.appointmentData.doctorName!}",
+                            style: const TextStyle(
+                              fontSize: 14,
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 5),
-                        Text(
-                          widget.appointmentData.specialization!,
-                          style: const TextStyle(
-                            fontSize: 14,
+                          const SizedBox(height: 5),
+                          Text(
+                            widget.appointmentData.specialization!,
+                            style: const TextStyle(
+                              fontSize: 14,
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 15),
-                        Text(
-                          widget.appointmentData.location!,
-                          style: const TextStyle(
-                            color: ColorPallete.grey,
-                            fontSize: 14,
+                          const SizedBox(height: 15),
+                          Text(
+                            widget.appointmentData.location!,
+                            style: const TextStyle(
+                              color: ColorPallete.grey,
+                              fontSize: 14,
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ],
                 ),
